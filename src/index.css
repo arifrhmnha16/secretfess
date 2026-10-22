@@ -1,0 +1,326 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700;1,800&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* Editorial Palette: Cream, Dark Chocolate, Pastel Pink */
+  --bg-cream: #FAF8F5;
+  --bg-card: #FFFFFF;
+  --color-chocolate: #2D160E;
+  --color-chocolate-rgb: 45, 22, 14;
+  --color-chocolate-muted: #6B5347;
+  --color-chocolate-faint: #9A8077;
+  
+  --color-pink: #FFAEC8;
+  --color-pink-soft: #FFF2F6;
+  --color-pink-hover: #FF9BBA;
+  --color-pink-deep: #E85B88;
+
+  --color-matcha: #D8F3DC;
+  --color-matcha-dark: #2D5A34;
+  --color-caramel: #FEEAA1;
+  --color-caramel-dark: #664E19;
+  --color-lavender: #EADCF8;
+  --color-lavender-dark: #503170;
+
+  /* Refined, measured borders and shadows (reduced from harsh heavy blocks) */
+  --border-card: 1.75px solid var(--color-chocolate);
+  --border-element: 1.5px solid var(--color-chocolate);
+  --border-thin: 1px solid rgba(45, 22, 14, 0.2);
+
+  --shadow-card: 4px 4px 0px var(--color-chocolate);
+  --shadow-card-hover: 6px 6px 0px var(--color-chocolate);
+  --shadow-btn: 3px 3px 0px var(--color-chocolate);
+  --shadow-pill: 2px 2px 0px var(--color-chocolate);
+  --shadow-active: 1px 1px 0px var(--color-chocolate);
+
+  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-hand: 'Caveat', cursive, sans-serif;
+
+  --radius-card: 22px;
+  --radius-pill: 9999px;
+  --radius-btn: 14px;
+  --radius-input: 12px;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-cream);
+  color: var(--color-chocolate);
+  min-height: 100vh;
+  line-height: 1.6;
+  font-size: 15px;
+  background-image: 
+    linear-gradient(to right, rgba(45, 22, 14, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(45, 22, 14, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-chocolate);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.font-hand {
+  font-family: var(--font-hand);
+}
+
+.italic-serif {
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* Reference Signature: Editorial Pink Highlight Box */
+.highlight-pink-box {
+  background-color: var(--color-pink);
+  color: #FFFFFF;
+  display: inline-block;
+  padding: 0.15em 0.45em;
+  border-radius: 6px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  transform: rotate(-0.5deg);
+  box-shadow: 2px 2px 0px var(--color-chocolate);
+}
+
+/* Capsule & Pill Badges */
+.pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+  border: var(--border-element);
+  background-color: var(--color-pink);
+  color: var(--color-chocolate);
+  box-shadow: var(--shadow-pill);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pill-badge.pill-white {
+  background-color: #FFFFFF;
+}
+
+.pill-badge.pill-dark {
+  background-color: var(--color-chocolate);
+  color: var(--bg-cream);
+  border-color: var(--color-chocolate);
+}
+
+.pill-badge.pill-matcha {
+  background-color: var(--color-matcha);
+  color: var(--color-matcha-dark);
+}
+
+.pill-badge.pill-caramel {
+  background-color: var(--color-caramel);
+  color: var(--color-caramel-dark);
+}
+
+.pill-badge.pill-lavender {
+  background-color: var(--color-lavender);
+  color: var(--color-lavender-dark);
+}
+
+/* Editorial Container */
+.editorial-container {
+  max-width: 1140px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .editorial-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Editorial Cards */
+.editorial-card {
+  background-color: var(--bg-card);
+  border: var(--border-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.editorial-card-interactive {
+  cursor: pointer;
+}
+
+.editorial-card-interactive:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 11px 22px;
+  border-radius: var(--radius-btn);
+  border: var(--border-element);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  user-select: none;
+  outline: none;
+  line-height: 1.2;
+}
+
+.btn-primary {
+  background-color: var(--color-chocolate);
+  color: var(--bg-cream);
+  box-shadow: var(--shadow-btn);
+}
+
+.btn-primary:hover {
+  background-color: #3f2015;
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4px 4px 0px var(--color-chocolate);
+}
+
+.btn-primary:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: var(--shadow-active);
+}
+
+.btn-pink {
+  background-color: var(--color-pink);
+  color: var(--color-chocolate);
+  box-shadow: var(--shadow-btn);
+}
+
+.btn-pink:hover {
+  background-color: var(--color-pink-hover);
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4px 4px 0px var(--color-chocolate);
+}
+
+.btn-pink:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: var(--shadow-active);
+}
+
+.btn-white {
+  background-color: #FFFFFF;
+  color: var(--color-chocolate);
+  box-shadow: var(--shadow-btn);
+}
+
+.btn-white:hover {
+  background-color: #FAF8F5;
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4px 4px 0px var(--color-chocolate);
+}
+
+.btn-white:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: var(--shadow-active);
+}
+
+.btn-capsule {
+  border-radius: var(--radius-pill);
+  padding: 9px 20px;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  border-radius: 10px;
+  box-shadow: var(--shadow-pill);
+}
+
+/* Form Controls */
+.editorial-input, .editorial-textarea, .editorial-select {
+  width: 100%;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  color: var(--color-chocolate);
+  background-color: #FFFFFF;
+  border: var(--border-element);
+  border-radius: var(--radius-input);
+  padding: 10px 14px;
+  box-shadow: var(--shadow-pill);
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.editorial-input:focus, .editorial-textarea:focus, .editorial-select:focus {
+  border-color: var(--color-chocolate);
+  box-shadow: var(--shadow-btn);
+  background-color: #FFFAFC;
+}
+
+.editorial-textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.input-label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+  color: var(--color-chocolate);
+}
+
+/* Section Separation Helper */
+.section-gap {
+  margin-top: 4.5rem;
+  margin-bottom: 4.5rem;
+}
+
+@media (min-width: 768px) {
+  .section-gap {
+    margin-top: 6rem;
+    margin-bottom: 6rem;
+  }
+}
+
+/* Micro-animations */
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #10B981;
+  display: inline-block;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C4B2A8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-chocolate);
+}
