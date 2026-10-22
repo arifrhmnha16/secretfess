@@ -35,6 +35,8 @@ import { telegramService } from '../../services/telegram';
 import { youtubeService } from '../../services/youtube';
 import { cloudinaryService } from '../../services/cloudinary';
 import { InstagramIcon } from '../common/Doodles';
+import { toPng } from 'html-to-image';
+import { LiveCardPreview } from '../common/LiveCardPreview';
 
 const YouTubeIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = '' }) => (
   <svg 
@@ -95,6 +97,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
 
   const playerRef = useRef<any>(null);
   const playerContainerRef = useRef<HTMLDivElement>(null);
+  const exportCardRef = useRef<HTMLDivElement>(null);
   const playbackIntervalRef = useRef<any>(null);
   const isTestingSnippetRef = useRef<boolean>(false);
 
@@ -439,23 +442,44 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
         ? `Mempersembahkan lagu "${selectedVideo.title}" (${selectedVideo.channelTitle}) [${youtubeService.formatSecondsToTime(startTime)} - ${youtubeService.formatSecondsToTime(startTime + duration)}]`
         : message.trim();
 
-      // Auto-render HD Story Canvas and upload to Cloudinary for instant Telegram Bot photo sending
+      // Auto-render HD Story Card directly from LiveCardPreview component
       let cardImageUrl: string | undefined = undefined;
       try {
-        const canvasDataUrl = await cloudinaryService.exportStoryCanvas({
-          id: 'temp',
-          trackingCode,
-          type: submissionType,
-          recipient: recipient.trim(),
-          senderAlias: isAnonymous ? 'Anonim' : senderAlias.trim(),
-          isAnonymous,
-          category: 'general',
-          message: finalMessage,
-          theme,
-          songData,
-          status: 'PENDING',
-          createdAt: new Date().toISOString()
-        });
+        let canvasDataUrl: string | null = null;
+        const targetElement = (exportCardRef.current?.querySelector('.rounded-3xl') || exportCardRef.current?.firstElementChild || exportCardRef.current) as HTMLElement | null;
+
+        if (targetElement) {
+          try {
+            canvasDataUrl = await toPng(targetElement, {
+              pixelRatio: 3,
+              quality: 1,
+              cacheBust: true,
+              style: {
+                transform: 'none'
+              }
+            });
+          } catch (e) {
+            console.warn('toPng DOM capture warning:', e);
+          }
+        }
+
+        // Fallback to canvas renderer if DOM snapshot wasn't available
+        if (!canvasDataUrl) {
+          canvasDataUrl = await cloudinaryService.exportStoryCanvas({
+            id: 'temp',
+            trackingCode,
+            type: submissionType,
+            recipient: recipient.trim(),
+            senderAlias: isAnonymous ? 'Anonim' : senderAlias.trim(),
+            isAnonymous,
+            category: 'general',
+            message: finalMessage,
+            theme,
+            songData,
+            status: 'PENDING',
+            createdAt: new Date().toISOString()
+          });
+        }
 
         if (canvasDataUrl) {
           const uploadedUrl = await cloudinaryService.uploadCardImage(canvasDataUrl, trackingCode);
@@ -1270,6 +1294,46 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
           </div>
         </div>
       )}
+
+      {/* Offscreen LiveCardPreview for pixel-perfect identical export with Admin Panel */}
+      <div 
+        aria-hidden="true" 
+        style={{ 
+          position: 'fixed', 
+          left: -99999, 
+          top: 0, 
+          width: 360, 
+          pointerEvents: 'none', 
+          opacity: 0,
+          zIndex: -1 
+        }}
+      >
+        <div ref={exportCardRef}>
+          <LiveCardPreview
+            type={submissionType}
+            recipient={recipient.trim()}
+            senderAlias={senderAlias.trim()}
+            isAnonymous={isAnonymous}
+            category="general"
+            message={submissionType === 'songfess' && selectedVideo
+              ? `Mempersembahkan lagu "${selectedVideo.title}" (${selectedVideo.channelTitle}) [${youtubeService.formatSecondsToTime(startTime)} - ${youtubeService.formatSecondsToTime(startTime + duration)}]`
+              : message.trim()}
+            theme={theme}
+            songData={submissionType === 'songfess' && selectedVideo ? {
+              title: selectedVideo.title,
+              artist: selectedVideo.channelTitle,
+              youtubeUrl: `https://www.youtube.com/watch?v=${selectedVideo.id}`,
+              thumbnailUrl: selectedVideo.thumbnailUrl,
+              startTime,
+              endTime: startTime + duration,
+              duration,
+              formattedTimeRange: `${youtubeService.formatSecondsToTime(startTime)} – ${youtubeService.formatSecondsToTime(startTime + duration)}`
+            } : undefined}
+            trackingCode="SF-CARD"
+            showThemePicker={false}
+          />
+        </div>
+      </div>
 
     </div>
   );

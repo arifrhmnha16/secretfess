@@ -829,6 +829,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
               theme={previewItem.theme}
               songData={previewItem.songData}
               trackingCode={previewItem.trackingCode}
+              onThemeChange={(newTheme) => {
+                setPreviewItem({ ...previewItem, theme: newTheme });
+              }}
             />
           </div>
         </div>

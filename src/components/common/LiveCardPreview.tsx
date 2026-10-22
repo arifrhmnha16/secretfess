@@ -92,6 +92,11 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
       link.download = `secretfess_${trackingCode}_${type}.png`;
       link.href = dataUrl;
       link.click();
+
+      // Silently sync the sharp LiveCardPreview PNG to Cloudinary so Telegram always gets this exact visual
+      if (trackingCode && !trackingCode.includes('PREVIEW') && cloudinaryService.isConfigured()) {
+        cloudinaryService.uploadCardImage(dataUrl, trackingCode).catch(() => {});
+      }
     } catch (err) {
       console.warn('DOM snapshot failed, falling back to canvas:', err);
       // Fallback to canvas renderer if needed
