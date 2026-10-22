@@ -103,10 +103,32 @@ export const telegramService = {
       reply_markup: this.getInlineKeyboard(submission.trackingCode)
     };
 
+    // 1. Opsi Serverless Proxy /api/notify-telegram (Prioritas: Bebas CORS & adblocker)
+    try {
+      const proxyRes = await fetch('/api/notify-telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submission,
+          telegramPayload: payload
+        })
+      });
+
+      if (proxyRes.ok) {
+        const data = await proxyRes.json();
+        if (data.ok) {
+          console.log('[Telegram Bot Proxy] Notifikasi terkirim via serverless API:', data.result?.message_id);
+          return { success: true, simulated: false, payload };
+        }
+      }
+    } catch {
+      // Serverless endpoint not reachable (e.g. standalone local vite dev), continue to direct API
+    }
+
+    // 2. Opsi Langsung ke Telegram Bot API (Fallback)
     const botToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
     const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
 
-    // 1. Opsi Langsung ke Telegram Bot API
     if (botToken && chatId && !botToken.includes('your_') && !chatId.includes('your_')) {
       try {
         const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -129,28 +151,6 @@ export const telegramService = {
         }
       } catch (err) {
         console.warn('[Telegram Bot API Network Error]:', err);
-      }
-    }
-
-    // 2. Opsi Lewat Backend Proxy / Cloud Function
-    const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
-
-    if (backendUrl && !backendUrl.includes('your-backend-api.com')) {
-      try {
-        const response = await fetch(`${backendUrl}/api/notify-telegram`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            submission,
-            telegramPayload: payload
-          })
-        });
-
-        if (response.ok) {
-          return { success: true, simulated: false, payload };
-        }
-      } catch (err) {
-        console.warn('Backend Telegram webhook failed, falling back to simulated log:', err);
       }
     }
 
