@@ -74,6 +74,7 @@ interface SubmissionItem {
   trackingCode: string;
   status: 'PENDING' | 'DESIGNED' | 'READY' | 'POSTED' | 'REJECTED';
   statusNote?: string;
+  cardImageUrl?: string;
   createdAt: string;
   songData?: {
     title: string;
@@ -257,12 +258,11 @@ function buildPanelContent(stats: Awaited<ReturnType<typeof getStats>>) {
 
 function buildSubmissionButtons(trackingCode: string) {
   const cleanCode = trackingCode.trim().toUpperCase().replace(/^#/, '');
-  const generateUrl = `https://secretfess.vercel.app/?admin=himase2026&preview=${cleanCode}`;
 
   return {
     inline_keyboard: [
       [
-        { text: '🖼️ Generate Desain Kartu (Unduh HD) 📥', url: generateUrl }
+        { text: '🖼️ Generate Desain Kartu (Kirim ke Grup) 📥', callback_data: `mod:generate:${cleanCode}` }
       ],
       [
         { text: '🎨 Tandai Designed', callback_data: `mod:designed:${cleanCode}` },
@@ -622,6 +622,23 @@ async function handleCallbackQuery(cb: {
     const item = await findSubmissionByCode(code);
     if (!item) {
       await answerCallbackQuery(cb.id, `Tiket #${code} tidak ditemukan`, true);
+      return;
+    }
+
+    if (action === 'generate') {
+      await answerCallbackQuery(cb.id, '⏳ Menyiapkan & mengirim gambar kartu ke grup...');
+      if (item.cardImageUrl) {
+        await callTelegram('sendPhoto', {
+          chat_id: chatId,
+          photo: item.cardImageUrl,
+          caption: `🖼️ <b>KARTU STORY #${item.trackingCode}</b>\n• <b>Tipe:</b> ${item.type.toUpperCase()}\n• <b>Untuk:</b> ${item.recipient}\n• <b>Dari:</b> ${item.isAnonymous ? '<i>Anonim</i>' : item.senderAlias}\n\nSiap diposting ke Instagram Story! 🚀`,
+          parse_mode: 'HTML',
+          reply_parameters: { message_id: messageId }
+        });
+      } else {
+        const previewUrl = `https://secretfess.vercel.app/?admin=himase2026&preview=${item.trackingCode}`;
+        await sendMessage(chatId, `⚠️ Gambar belum tersedia di cloud. Silakan buka web admin: ${previewUrl}`, null, messageId);
+      }
       return;
     }
 

@@ -33,6 +33,7 @@ import type {
 import { submissionService, type LiveSessionStatus } from '../../services/firebase';
 import { telegramService } from '../../services/telegram';
 import { youtubeService } from '../../services/youtube';
+import { cloudinaryService } from '../../services/cloudinary';
 import { InstagramIcon } from '../common/Doodles';
 
 const YouTubeIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = '' }) => (
@@ -438,6 +439,34 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
         ? `Mempersembahkan lagu "${selectedVideo.title}" (${selectedVideo.channelTitle}) [${youtubeService.formatSecondsToTime(startTime)} - ${youtubeService.formatSecondsToTime(startTime + duration)}]`
         : message.trim();
 
+      // Auto-render HD Story Canvas and upload to Cloudinary for instant Telegram Bot photo sending
+      let cardImageUrl: string | undefined = undefined;
+      try {
+        const canvasDataUrl = await cloudinaryService.exportStoryCanvas({
+          id: 'temp',
+          trackingCode,
+          type: submissionType,
+          recipient: recipient.trim(),
+          senderAlias: isAnonymous ? 'Anonim' : senderAlias.trim(),
+          isAnonymous,
+          category: 'general',
+          message: finalMessage,
+          theme,
+          songData,
+          status: 'PENDING',
+          createdAt: new Date().toISOString()
+        });
+
+        if (canvasDataUrl) {
+          const uploadedUrl = await cloudinaryService.uploadCardImage(canvasDataUrl, trackingCode);
+          if (uploadedUrl) {
+            cardImageUrl = uploadedUrl;
+          }
+        }
+      } catch (renderErr) {
+        console.warn('Auto-render to Cloudinary failed:', renderErr);
+      }
+
       const created = await submissionService.createSubmission({
         trackingCode,
         type: submissionType,
@@ -447,7 +476,8 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
         category: 'general',
         message: finalMessage,
         theme,
-        songData
+        songData,
+        cardImageUrl
       });
 
       let telegramDispatched = false;
