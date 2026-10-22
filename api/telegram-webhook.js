@@ -13,7 +13,7 @@ import {
   limit 
 } from 'firebase/firestore';
 
-// Initialize Firebase
+// Initialize Firebase SDK
 const firebaseConfig = {
   apiKey: process.env.VITE_FIREBASE_API_KEY,
   authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -29,6 +29,7 @@ const db = getFirestore(app);
 const BOT_TOKEN = process.env.VITE_TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_API_URL = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
+// Telegram API Helper Functions
 async function callTelegram(method, body) {
   try {
     const res = await fetch(`${TELEGRAM_API_URL}/${method}`, {
@@ -92,49 +93,87 @@ async function editMessageText(chatId, messageId, text, replyMarkup) {
 }
 
 async function deleteMessage(chatId, messageId) {
+  if (!chatId || !messageId) return null;
   return callTelegram('deleteMessage', {
     chat_id: chatId,
     message_id: messageId
   });
 }
 
+// Resilient memory cache in case of restricted Firestore rules or network delays
+const memorySession = {
+  isOpen: true,
+  sessionNumber: 1,
+  quotaTotal: 50,
+  operatingHours: '18:00 – 23:00 WIB',
+  title: 'HIMASEFESS',
+  announcement: ''
+};
+
+async function safeSaveSession(updates) {
+  Object.assign(memorySession, updates);
+  try {
+    const sessionRef = doc(db, 'config', 'session');
+    await setDoc(sessionRef, updates, { merge: true });
+    return { ok: true };
+  } catch (err) {
+    console.warn('[Firestore safeSaveSession warning]:', err.message);
+    return { ok: false, error: err.message };
+  }
+}
+
+async function safeUpdateSubmission(id, updates) {
+  try {
+    await updateDoc(doc(db, 'submissions', id), updates);
+    return { ok: true };
+  } catch (err) {
+    console.warn('[Firestore safeUpdateSubmission warning]:', err.message);
+    return { ok: false, error: err.message };
+  }
+}
+
 async function findSubmissionByCode(code) {
   if (!code) return null;
   const clean = code.trim().toUpperCase().replace(/^#/, '');
-  const q = query(collection(db, 'submissions'), where('trackingCode', '==', clean), limit(1));
-  const snap = await getDocs(q);
-  if (!snap.empty) {
-    const d = snap.docs[0];
-    return { ...d.data(), id: d.id };
+  try {
+    const q = query(collection(db, 'submissions'), where('trackingCode', '==', clean), limit(1));
+    const snap = await getDocs(q);
+    if (!snap.empty) {
+      const d = snap.docs[0];
+      return { ...d.data(), id: d.id };
+    }
+  } catch (err) {
+    console.warn('[Firestore findSubmission warning]:', err.message);
   }
   return null;
 }
 
 async function getSessionData() {
-  const sessionRef = doc(db, 'config', 'session');
-  const snap = await getDoc(sessionRef);
-  if (snap.exists()) {
-    const data = snap.data();
-    return {
-      isOpen: data.isOpen ?? true,
-      sessionNumber: data.sessionNumber === 12 ? 1 : (data.sessionNumber || 1),
-      quotaTotal: data.quotaTotal || 50,
-      operatingHours: data.operatingHours || '18:00 – 23:00 WIB',
-      title: data.title,
-      announcement: data.announcement
-    };
+  try {
+    const sessionRef = doc(db, 'config', 'session');
+    const snap = await getDoc(sessionRef);
+    if (snap.exists()) {
+      const data = snap.data();
+      const loaded = {
+        isOpen: data.isOpen ?? memorySession.isOpen,
+        sessionNumber: data.sessionNumber === 12 ? 1 : (data.sessionNumber || memorySession.sessionNumber),
+        quotaTotal: data.quotaTotal || memorySession.quotaTotal,
+        operatingHours: data.operatingHours || memorySession.operatingHours,
+        title: data.title || memorySession.title,
+        announcement: data.announcement || memorySession.announcement
+      };
+      Object.assign(memorySession, loaded);
+      return loaded;
+    }
+  } catch (err) {
+    console.warn('[Firestore getSession warning]:', err.message);
   }
-  return {
-    isOpen: true,
-    sessionNumber: 1,
-    quotaTotal: 50,
-    operatingHours: '18:00 – 23:00 WIB'
-  };
+
+  return { ...memorySession };
 }
 
 async function getStats() {
   const session = await getSessionData();
-  const subsSnap = await getDocs(collection(db, 'submissions'));
   
   let total = 0;
   let pending = 0;
@@ -142,39 +181,48 @@ async function getStats() {
   let ready = 0;
   let posted = 0;
   let rejected = 0;
+  let hasDbError = false;
 
-  subsSnap.forEach((docSnap) => {
-    total++;
-    const st = docSnap.data().status;
-    if (st === 'PENDING') pending++;
-    else if (st === 'DESIGNED') designed++;
-    else if (st === 'READY') ready++;
-    else if (st === 'POSTED') posted++;
-    else if (st === 'REJECTED') rejected++;
-  });
+  try {
+    const subsSnap = await getDocs(collection(db, 'submissions'));
+    subsSnap.forEach((docSnap) => {
+      total++;
+      const st = docSnap.data().status;
+      if (st === 'PENDING') pending++;
+      else if (st === 'DESIGNED') designed++;
+      else if (st === 'READY') ready++;
+      else if (st === 'POSTED') posted++;
+      else if (st === 'REJECTED') rejected++;
+    });
+  } catch (err) {
+    hasDbError = true;
+    console.warn('[Firestore getStats warning]:', err.message);
+  }
 
-  return { session, total, pending, designed, ready, posted, rejected };
+  return { session, total, pending, designed, ready, posted, rejected, hasDbError };
 }
 
 function buildPanelContent(stats) {
-  const { session, total, pending, designed, ready, posted } = stats;
+  const { session, total, pending, designed, ready, posted, hasDbError } = stats;
   const statusBadge = session.isOpen ? '🟢 <b>BUKA</b>' : '🔴 <b>TUTUP</b>';
   const remaining = Math.max(0, session.quotaTotal - total);
 
-  const text = `<b>🎛️ PANEL KONTROL PENGURUS HIMASEFESS</b>
-──────────────────────────────
-📌 <b>Status Songfess:</b> ${statusBadge}
-🎫 <b>Nomor Sesi:</b> <code>Sesi #${session.sessionNumber}</code>
-🎯 <b>Kuota Terisi:</b> <b>${total}</b> / ${session.quotaTotal} (Sisa: <b>${remaining}</b>)
-⏰ <b>Jam Tayang:</b> ${session.operatingHours}
-
-📊 <b>Status Kiriman Saat Ini:</b>
-• ⏳ Pending: <b>${pending}</b>
-• 🎨 Designed: <b>${designed}</b>
-• ✅ Siap Tayang: <b>${ready}</b>
-• 🚀 Sudah Post: <b>${posted}</b>
-──────────────────────────────
-<i>Gunakan tombol di bawah untuk kontrol instan:</i>`;
+  let text = `<b>🎛️ PANEL KONTROL PENGURUS HIMASEFESS</b>\n`;
+  text += `──────────────────────────────\n`;
+  text += `📌 <b>Status Songfess:</b> ${statusBadge}\n`;
+  text += `🎫 <b>Nomor Sesi:</b> <code>Sesi #${session.sessionNumber}</code>\n`;
+  text += `🎯 <b>Kuota Terisi:</b> <b>${total}</b> / ${session.quotaTotal} (Sisa: <b>${remaining}</b>)\n`;
+  text += `⏰ <b>Jam Tayang:</b> ${session.operatingHours}\n\n`;
+  text += `📊 <b>Status Kiriman Saat Ini:</b>\n`;
+  text += `• ⏳ Pending: <b>${pending}</b>\n`;
+  text += `• 🎨 Designed: <b>${designed}</b>\n`;
+  text += `• ✅ Siap Tayang: <b>${ready}</b>\n`;
+  text += `• 🚀 Sudah Post: <b>${posted}</b>\n`;
+  text += `──────────────────────────────\n`;
+  if (hasDbError) {
+    text += `⚠️ <i>Catatan: Database Firestore mengaktifkan aturan proteksi. Mode fallback aktif.</i>\n`;
+  }
+  text += `<i>Gunakan tombol di bawah untuk kontrol instan:</i>`;
 
   const toggleBtnText = session.isOpen ? '🔴 Tutup Sesi Songfess' : '🟢 Buka Sesi Songfess';
 
@@ -246,14 +294,19 @@ export default async function handler(req, res) {
 
       // A. GENERATE DESAIN KARTU & KIRIM GAMBAR LANGSUNG KE GRUP
       if (data.startsWith('mod:generate:') || data.startsWith('mod:generate_image:')) {
-        const code = data.replace('mod:generate:', '').replace('mod:generate_image:', '');
+        const code = data.replace('mod:generate:', '').replace('mod:generate_image:', '').trim();
         
-        // 1. Berikan respon visual cepat di Telegram
-        await answerCallbackQuery(cb.id, '⏳ Sedang memproses & mengirim gambar kartu ke grup...');
+        // 1. Respon feedback instan di Telegram
+        await answerCallbackQuery(cb.id, '⏳ Sedang meng-generate gambar kartu, mohon tunggu...');
         await sendChatAction(chatId, 'upload_photo');
 
-        // 2. Beri notifikasi chat bahwa proses sedang berjalan
-        const progressMsg = await sendMessage(chatId, `⏳ <b>Sedang memproses desain kartu #${code}...</b>\nBot sedang mengambil gambar resolusi tinggi untuk dikirim ke grup.`, null, messageId);
+        // 2. Beri pesan notifikasi progress sementara di chat
+        const progressMsg = await sendMessage(
+          chatId, 
+          `⏳ <b>Sedang memproses desain kartu #${code}...</b>\nBot sedang menyiapkan dan mengunggah gambar resolusi tinggi ke grup.`, 
+          null, 
+          messageId
+        );
 
         const item = await findSubmissionByCode(code);
         if (!item) {
@@ -294,7 +347,6 @@ export default async function handler(req, res) {
           // Kirim foto resolusi tinggi langsung ke grup
           const photoRes = await sendPhoto(chatId, item.cardImageUrl, caption, actionButtons, messageId);
           if (photoRes && photoRes.ok) {
-            // Hapus pesan progress sementara agar chat tetap rapi
             if (progressMsg?.result?.message_id) {
               await deleteMessage(chatId, progressMsg.result.message_id);
             }
@@ -302,12 +354,12 @@ export default async function handler(req, res) {
           }
         }
 
-        // Fallback jika belum sempat di-upload
+        // Fallback jika gambar cloud belum tersedia
         if (progressMsg?.result?.message_id) await deleteMessage(chatId, progressMsg.result.message_id);
         const previewUrl = `https://secretfess.vercel.app/?admin=himase2026&preview=${item.trackingCode}`;
         await sendMessage(
           chatId,
-          `${caption}\n\n⚠️ <i>Gambar belum selesai di-cache di cloud. Klik tombol di bawah untuk membuka kartu dan unduh PNG HD:</i>`,
+          `${caption}\n\n⚠️ <i>Gambar kartu belum sempat di-render otomatis ke cloud. Klik tombol di bawah untuk membuka kartu dan unduh PNG HD:</i>`,
           {
             inline_keyboard: [
               [{ text: '📥 Buka & Unduh Kartu HD', url: previewUrl }],
@@ -326,7 +378,8 @@ export default async function handler(req, res) {
         const action = parts[1];
         const code = parts[2];
 
-        await answerCallbackQuery(cb.id, `⏳ Sedang mengupdate status #${code}...`);
+        // 1. Berikan notifikasi proses instan ke Telegram
+        await answerCallbackQuery(cb.id, `⏳ Sedang memproses update status #${code}...`);
         await sendChatAction(chatId, 'typing');
 
         const item = await findSubmissionByCode(code);
@@ -357,13 +410,13 @@ export default async function handler(req, res) {
           note = `Ditolak oleh ${fromUser}`;
         }
 
-        await updateDoc(doc(db, 'submissions', item.id), {
+        await safeUpdateSubmission(item.id, {
           status: targetStatus,
           statusNote: note,
           reviewedAt: new Date().toISOString()
         });
 
-        await answerCallbackQuery(cb.id, `Tiket #${code}: ${statusText}`);
+        await answerCallbackQuery(cb.id, `✅ Tiket #${code}: ${statusText}`);
 
         const originalText = cb.message?.text || cb.message?.caption || '';
         const updatedNotice = `\n\n📌 <b>STATUS TERBARU:</b> [${statusText}]\n👤 <b>Moderator:</b> ${fromUser}\n📝 <i>${note}</i>`;
@@ -390,12 +443,12 @@ export default async function handler(req, res) {
 
       // C. PANEL CONTROLLER BUTTONS (Toggle Sesi, +1 Sesi, Refresh, Kuota)
       if (data === 'ctrl:toggle_session') {
-        await answerCallbackQuery(cb.id, '⏳ Mengubah status sesi...');
-        const sessionRef = doc(db, 'config', 'session');
-        const snap = await getDoc(sessionRef);
-        const isOpen = snap.exists() ? Boolean(snap.data().isOpen) : true;
-        const newOpen = !isOpen;
-        await setDoc(sessionRef, { isOpen: newOpen }, { merge: true });
+        await answerCallbackQuery(cb.id, '⏳ Sedang mengubah status sesi...');
+        await sendChatAction(chatId, 'typing');
+
+        const session = await getSessionData();
+        const newOpen = !session.isOpen;
+        await safeSaveSession({ isOpen: newOpen });
 
         await answerCallbackQuery(cb.id, `Status Sesi sekarang: ${newOpen ? 'DIBUKA 🟢' : 'DITUTUP 🔴'}`);
         const stats = await getStats();
@@ -405,10 +458,12 @@ export default async function handler(req, res) {
       }
 
       if (data === 'ctrl:session_plus1') {
-        await answerCallbackQuery(cb.id, '⏳ Menambah nomor sesi...');
+        await answerCallbackQuery(cb.id, '⏳ Sedang menambah nomor sesi...');
+        await sendChatAction(chatId, 'typing');
+
         const session = await getSessionData();
         const newNumber = session.sessionNumber + 1;
-        await setDoc(doc(db, 'config', 'session'), { sessionNumber: newNumber }, { merge: true });
+        await safeSaveSession({ sessionNumber: newNumber });
 
         await answerCallbackQuery(cb.id, `Nomor Sesi dinaikkan ke #${newNumber} ➕`);
         const stats = await getStats();
@@ -418,7 +473,9 @@ export default async function handler(req, res) {
       }
 
       if (data === 'ctrl:refresh_panel') {
-        await answerCallbackQuery(cb.id, '🔄 Memperbarui data...');
+        await answerCallbackQuery(cb.id, '🔄 Memperbarui ringkasan data...');
+        await sendChatAction(chatId, 'typing');
+
         const stats = await getStats();
         const { text, replyMarkup } = buildPanelContent(stats);
         await editMessageText(chatId, messageId, text, replyMarkup);
@@ -426,23 +483,30 @@ export default async function handler(req, res) {
       }
 
       if (data === 'ctrl:list_pending') {
-        await answerCallbackQuery(cb.id, '⏳ Mengambil kiriman pending...');
-        const q = query(
-          collection(db, 'submissions'), 
-          where('status', '==', 'PENDING'), 
-          orderBy('createdAt', 'desc'), 
-          limit(5)
-        );
-        const snap = await getDocs(q);
+        await answerCallbackQuery(cb.id, '⏳ Mengambil antrean kiriman pending...');
+        await sendChatAction(chatId, 'typing');
 
-        if (snap.empty) {
-          await sendMessage(chatId, '🎉 <b>Tidak ada antrean kiriman pending saat ini!</b> Semua kiriman telah dimoderasi.', null, messageId);
+        let pendingItems = [];
+        try {
+          const q = query(
+            collection(db, 'submissions'), 
+            where('status', '==', 'PENDING'), 
+            orderBy('createdAt', 'desc'), 
+            limit(5)
+          );
+          const snap = await getDocs(q);
+          pendingItems = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+        } catch (err) {
+          console.warn('[ctrl:list_pending Firestore warning]:', err.message);
+        }
+
+        if (pendingItems.length === 0) {
+          await sendMessage(chatId, '🎉 <b>Tidak ada antrean kiriman pending saat ini!</b> Semua kiriman telah diproses.', null, messageId);
           return res.status(200).json({ ok: true });
         }
 
-        await sendMessage(chatId, `⏳ <b>Daftar ${snap.size} Kiriman Pending Terbaru:</b>`, null, messageId);
-        for (const docSnap of snap.docs) {
-          const item = { ...docSnap.data(), id: docSnap.id };
+        await sendMessage(chatId, `⏳ <b>Daftar ${pendingItems.length} Kiriman Pending Terbaru:</b>`, null, messageId);
+        for (const item of pendingItems) {
           let msg = `<b>[${item.type.toUpperCase()}]</b> <code>#${item.trackingCode}</code>\n`;
           msg += `<b>Untuk:</b> ${item.recipient} | <b>Dari:</b> ${item.isAnonymous ? '<i>Anonim</i>' : item.senderAlias}\n`;
           if (item.songData) {
@@ -457,8 +521,10 @@ export default async function handler(req, res) {
       if (data.startsWith('ctrl:set_quota:')) {
         const quota = parseInt(data.replace('ctrl:set_quota:', ''));
         if (!isNaN(quota)) {
-          await answerCallbackQuery(cb.id, `⏳ Mengatur kuota ke ${quota}...`);
-          await setDoc(doc(db, 'config', 'session'), { quotaTotal: quota }, { merge: true });
+          await answerCallbackQuery(cb.id, `⏳ Sedang mengatur kuota ke ${quota}...`);
+          await sendChatAction(chatId, 'typing');
+
+          await safeSaveSession({ quotaTotal: quota });
           const stats = await getStats();
           const { text, replyMarkup } = buildPanelContent(stats);
           await editMessageText(chatId, messageId, text, replyMarkup);
@@ -476,14 +542,19 @@ export default async function handler(req, res) {
       const chatId = msg.chat.id;
       const parts = text.split(/\s+/);
       
-      // Hapus bot suffix (misal: /buka@himasefess_bot -> /buka)
+      // Hapus bot suffix grup (misal: /buka@himasefess_bot -> /buka)
       const rawCmd = parts[0].toLowerCase();
       const cmd = rawCmd.split('@')[0];
       const arg1 = parts[1];
       const arg2 = parts.slice(2).join(' ');
       const username = msg.from?.username || msg.from?.first_name || 'Pengurus';
 
-      // Status indicator saat mengetik
+      // Pastikan hanya memproses command yang diawali slash '/'
+      if (!cmd.startsWith('/')) {
+        return res.status(200).json({ ok: true });
+      }
+
+      // Berikan chat action "typing" seketika
       await sendChatAction(chatId, 'typing');
 
       // Command: /start atau /help
@@ -504,7 +575,7 @@ Berikut daftar perintah yang dapat kamu gunakan:
 
 <b>📋 MODERASI & GENERATE DESAIN</b>
 • <code>/generate &lt;kode&gt;</code> : Minta bot kirim foto desain kartu langsung ke grup (contoh: <code>/generate SF-2026-8691</code>)
-• <code>/pending</code> : Lihat 5 kiriman pending terbaru beserta tombol aksi
+• <code>/pending</code> : Lihat kiriman pending terbaru beserta tombol aksi
 • <code>/detail &lt;kode&gt;</code> : Cek detail kiriman (contoh: <code>/detail SF-2026-8691</code>)
 • <code>/design &lt;kode&gt;</code> : Tandai kiriman sudah di-design
 • <code>/ready &lt;kode&gt;</code> : Tandai kiriman siap tayang (Approved)
@@ -532,12 +603,17 @@ Berikut daftar perintah yang dapat kamu gunakan:
         }
 
         await sendChatAction(chatId, 'upload_photo');
-        const progressMsg = await sendMessage(chatId, `⏳ <b>Sedang memproses desain kartu #${arg1}...</b>`, null, msg.message_id);
+        const progressMsg = await sendMessage(
+          chatId, 
+          `⏳ <b>Sedang memproses desain kartu #${arg1}...</b>\nBot sedang menyiapkan dan mengunggah gambar resolusi tinggi ke grup.`, 
+          null, 
+          msg.message_id
+        );
 
         const item = await findSubmissionByCode(arg1);
         if (!item) {
           if (progressMsg?.result?.message_id) await deleteMessage(chatId, progressMsg.result.message_id);
-          await sendMessage(chatId, `❌ Kiriman dengan kode <code>#${arg1}</code> tidak ditemukan.`, null, msg.message_id);
+          await sendMessage(chatId, `❌ Kiriman dengan kode <code>#${arg1}</code> tidak ditemukan di database.`, null, msg.message_id);
           return res.status(200).json({ ok: true });
         }
 
@@ -567,17 +643,25 @@ Berikut daftar perintah yang dapat kamu gunakan:
 
       // Command: /buka
       if (cmd === '/buka' || cmd === '/buka_songfess') {
-        await setDoc(doc(db, 'config', 'session'), { isOpen: true }, { merge: true });
+        const saveRes = await safeSaveSession({ isOpen: true });
         const stats = await getStats();
-        await sendMessage(chatId, `🟢 <b>Sesi Songfess #${stats.session.sessionNumber} BERHASIL DIBUKA!</b>\nPengunjung sekarang dapat mengisi formulir Songfess di website.`, null, msg.message_id);
+        let reply = `🟢 <b>Sesi Songfess #${stats.session.sessionNumber} BERHASIL DIBUKA!</b>\nPengunjung sekarang dapat mengisi formulir Songfess di website.`;
+        if (!saveRes.ok) {
+          reply += `\n\n⚠️ <i>(Info: Database Firestore masih memerlukan update rules ke allow read, write: if true; agar tersimpan permanen di cloud)</i>`;
+        }
+        await sendMessage(chatId, reply, null, msg.message_id);
         return res.status(200).json({ ok: true });
       }
 
       // Command: /tutup
       if (cmd === '/tutup' || cmd === '/tutup_songfess') {
-        await setDoc(doc(db, 'config', 'session'), { isOpen: false }, { merge: true });
+        const saveRes = await safeSaveSession({ isOpen: false });
         const stats = await getStats();
-        await sendMessage(chatId, `🔴 <b>Sesi Songfess #${stats.session.sessionNumber} TELAH DITUTUP.</b>\nFormulir Songfess di website sekarang dikunci.`, null, msg.message_id);
+        let reply = `🔴 <b>Sesi Songfess #${stats.session.sessionNumber} TELAH DITUTUP.</b>\nFormulir Songfess di website sekarang dikunci.`;
+        if (!saveRes.ok) {
+          reply += `\n\n⚠️ <i>(Info: Database Firestore masih memerlukan update rules ke allow read, write: if true; agar tersimpan permanen di cloud)</i>`;
+        }
+        await sendMessage(chatId, reply, null, msg.message_id);
         return res.status(200).json({ ok: true });
       }
 
@@ -587,19 +671,21 @@ Berikut daftar perintah yang dapat kamu gunakan:
         const statusBadge = stats.session.isOpen ? '🟢 BUKA' : '🔴 TUTUP';
         const remaining = Math.max(0, stats.session.quotaTotal - stats.total);
 
-        const statusMsg = `<b>📊 STATUS HIMASEFESS SAAT INI</b>
-──────────────────────────────
-• <b>Sesi:</b> <code>#${stats.session.sessionNumber}</code> (${statusBadge})
-• <b>Kuota:</b> ${stats.total} / ${stats.session.quotaTotal} (Sisa: ${remaining})
-• <b>Jam Buka:</b> ${stats.session.operatingHours}
-
-<b>Statistik Moderasi:</b>
-• ⏳ Pending: <b>${stats.pending}</b>
-• 🎨 Designed: <b>${stats.designed}</b>
-• ✅ Siap Tayang (Ready): <b>${stats.ready}</b>
-• 🚀 Sudah Tayang (Posted): <b>${stats.posted}</b>
-• ❌ Ditolak (Rejected): <b>${stats.rejected}</b>
-──────────────────────────────`;
+        let statusMsg = `<b>📊 STATUS HIMASEFESS SAAT INI</b>\n`;
+        statusMsg += `──────────────────────────────\n`;
+        statusMsg += `• <b>Sesi:</b> <code>#${stats.session.sessionNumber}</code> (${statusBadge})\n`;
+        statusMsg += `• <b>Kuota:</b> ${stats.total} / ${stats.session.quotaTotal} (Sisa: ${remaining})\n`;
+        statusMsg += `• <b>Jam Buka:</b> ${stats.session.operatingHours}\n\n`;
+        statusMsg += `<b>Statistik Moderasi:</b>\n`;
+        statusMsg += `• ⏳ Pending: <b>${stats.pending}</b>\n`;
+        statusMsg += `• 🎨 Designed: <b>${stats.designed}</b>\n`;
+        statusMsg += `• ✅ Siap Tayang (Ready): <b>${stats.ready}</b>\n`;
+        statusMsg += `• 🚀 Sudah Tayang (Posted): <b>${stats.posted}</b>\n`;
+        statusMsg += `• ❌ Ditolak (Rejected): <b>${stats.rejected}</b>\n`;
+        statusMsg += `──────────────────────────────`;
+        if (stats.hasDbError) {
+          statusMsg += `\n⚠️ <i>(Firestore Rules di Firebase Console sedang terkunci; pastikan diatur ke allow read, write: if true;)</i>`;
+        }
         await sendMessage(chatId, statusMsg, null, msg.message_id);
         return res.status(200).json({ ok: true });
       }
@@ -611,7 +697,7 @@ Berikut daftar perintah yang dapat kamu gunakan:
           await sendMessage(chatId, '⚠️ Format salah. Gunakan: <code>/sesi &lt;nomor&gt;</code> (contoh: <code>/sesi 2</code>)', null, msg.message_id);
           return res.status(200).json({ ok: true });
         }
-        await setDoc(doc(db, 'config', 'session'), { sessionNumber: num }, { merge: true });
+        await safeSaveSession({ sessionNumber: num });
         await sendMessage(chatId, `✅ <b>Nomor Sesi berhasil diubah menjadi: Sesi #${num}</b>`, null, msg.message_id);
         return res.status(200).json({ ok: true });
       }
@@ -623,7 +709,7 @@ Berikut daftar perintah yang dapat kamu gunakan:
           await sendMessage(chatId, '⚠️ Format salah. Gunakan: <code>/kuota &lt;jumlah&gt;</code> (contoh: <code>/kuota 50</code>)', null, msg.message_id);
           return res.status(200).json({ ok: true });
         }
-        await setDoc(doc(db, 'config', 'session'), { quotaTotal: quota }, { merge: true });
+        await safeSaveSession({ quotaTotal: quota });
         await sendMessage(chatId, `✅ <b>Maksimal Kuota berhasil diubah menjadi: ${quota} kiriman</b>`, null, msg.message_id);
         return res.status(200).json({ ok: true });
       }
@@ -635,29 +721,38 @@ Berikut daftar perintah yang dapat kamu gunakan:
           await sendMessage(chatId, '⚠️ Format salah. Gunakan: <code>/jam 18:00 – 23:00 WIB</code>', null, msg.message_id);
           return res.status(200).json({ ok: true });
         }
-        await setDoc(doc(db, 'config', 'session'), { operatingHours: hours }, { merge: true });
+        await safeSaveSession({ operatingHours: hours });
         await sendMessage(chatId, `✅ <b>Jam Operasional diubah menjadi: ${hours}</b>`, null, msg.message_id);
         return res.status(200).json({ ok: true });
       }
 
       // Command: /pending
       if (cmd === '/pending') {
-        const q = query(
-          collection(db, 'submissions'), 
-          where('status', '==', 'PENDING'), 
-          orderBy('createdAt', 'desc'), 
-          limit(5)
-        );
-        const snap = await getDocs(q);
+        const progMsg = await sendMessage(chatId, '⏳ <i>Sedang mengambil daftar antrean pending...</i>', null, msg.message_id);
+        
+        let pendingItems = [];
+        try {
+          const q = query(
+            collection(db, 'submissions'), 
+            where('status', '==', 'PENDING'), 
+            orderBy('createdAt', 'desc'), 
+            limit(5)
+          );
+          const snap = await getDocs(q);
+          pendingItems = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+        } catch (err) {
+          console.warn('[Firestore /pending warning]:', err.message);
+        }
 
-        if (snap.empty) {
-          await sendMessage(chatId, '🎉 <b>Tidak ada antrean kiriman pending saat ini!</b> Semua kiriman telah dimoderasi.', null, msg.message_id);
+        if (progMsg?.result?.message_id) await deleteMessage(chatId, progMsg.result.message_id);
+
+        if (pendingItems.length === 0) {
+          await sendMessage(chatId, '🎉 <b>Tidak ada antrean kiriman pending saat ini!</b> Semua kiriman telah diproses.', null, msg.message_id);
           return res.status(200).json({ ok: true });
         }
 
-        await sendMessage(chatId, `⏳ <b>Daftar ${snap.size} Kiriman Pending Terbaru:</b>`, null, msg.message_id);
-        for (const docSnap of snap.docs) {
-          const item = { ...docSnap.data(), id: docSnap.id };
+        await sendMessage(chatId, `⏳ <b>Daftar ${pendingItems.length} Kiriman Pending Terbaru:</b>`, null, msg.message_id);
+        for (const item of pendingItems) {
           let pMsg = `<b>[${item.type.toUpperCase()}]</b> <code>#${item.trackingCode}</code>\n`;
           pMsg += `<b>Untuk:</b> ${item.recipient} | <b>Dari:</b> ${item.isAnonymous ? '<i>Anonim</i>' : item.senderAlias}\n`;
           if (item.songData) {
@@ -675,9 +770,13 @@ Berikut daftar perintah yang dapat kamu gunakan:
           await sendMessage(chatId, '⚠️ Masukkan kode tiket. Contoh: <code>/detail SF-2026-1234</code>', null, msg.message_id);
           return res.status(200).json({ ok: true });
         }
+
+        const progMsg = await sendMessage(chatId, `⏳ <i>Mencari data #${arg1}...</i>`, null, msg.message_id);
         const item = await findSubmissionByCode(arg1);
+        if (progMsg?.result?.message_id) await deleteMessage(chatId, progMsg.result.message_id);
+
         if (!item) {
-          await sendMessage(chatId, `❌ Kiriman dengan kode <code>#${arg1}</code> tidak ditemukan.`, null, msg.message_id);
+          await sendMessage(chatId, `❌ Kiriman dengan kode <code>#${arg1}</code> tidak ditemukan di database.`, null, msg.message_id);
           return res.status(200).json({ ok: true });
         }
 
@@ -712,9 +811,12 @@ Berikut daftar perintah yang dapat kamu gunakan:
           return res.status(200).json({ ok: true });
         }
 
+        const progMsg = await sendMessage(chatId, `⏳ <i>Memproses update status #${arg1}...</i>`, null, msg.message_id);
         const item = await findSubmissionByCode(arg1);
+        if (progMsg?.result?.message_id) await deleteMessage(chatId, progMsg.result.message_id);
+
         if (!item) {
-          await sendMessage(chatId, `❌ Kiriman dengan kode <code>#${arg1}</code> tidak ditemukan.`, null, msg.message_id);
+          await sendMessage(chatId, `❌ Kiriman dengan kode <code>#${arg1}</code> tidak ditemukan di database.`, null, msg.message_id);
           return res.status(200).json({ ok: true });
         }
 
@@ -732,7 +834,7 @@ Berikut daftar perintah yang dapat kamu gunakan:
           note = arg2 || 'Ditolak: Konten tidak sesuai panduan komunitas.';
         }
 
-        await updateDoc(doc(db, 'submissions', item.id), {
+        await safeUpdateSubmission(item.id, {
           status: newStatus,
           statusNote: note,
           reviewedAt: new Date().toISOString()
@@ -741,6 +843,15 @@ Berikut daftar perintah yang dapat kamu gunakan:
         await sendMessage(chatId, `✅ <b>Tiket #${item.trackingCode} berhasil diubah statusnya menjadi: ${newStatus}</b>\nCatatan: <i>${note}</i>`, null, msg.message_id);
         return res.status(200).json({ ok: true });
       }
+
+      // Fallback untuk command asing yang diawali '/'
+      await sendMessage(
+        chatId, 
+        `❓ Perintah <code>${cmd}</code> tidak dikenali.\nKetik <code>/help</code> atau <code>/panel</code> untuk membuka daftar fitur kontrol bot.`, 
+        null, 
+        msg.message_id
+      );
+      return res.status(200).json({ ok: true });
     }
 
     return res.status(200).json({ ok: true });

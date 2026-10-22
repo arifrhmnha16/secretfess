@@ -279,7 +279,8 @@ function buildSubmissionButtons(trackingCode: string) {
 // Command Handlers
 async function handleCommand(chatId: number | string, text: string, username?: string) {
   const parts = text.trim().split(/\s+/);
-  const cmd = parts[0].toLowerCase();
+  const rawCmd = parts[0].toLowerCase();
+  const cmd = rawCmd.split('@')[0];
   const arg1 = parts[1];
   const arg2 = parts.slice(2).join(' ');
 
