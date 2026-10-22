@@ -67,7 +67,23 @@ export const youtubeService = {
     const q = queryText.trim();
     if (!q) return { results: [] };
 
-    // If no valid API key is set, use fallback search
+    // 1. Coba lewat serverless proxy /api/search-youtube (Bypass referer restriction & CORS)
+    try {
+      const proxyRes = await fetch(`/api/search-youtube?q=${encodeURIComponent(q)}`);
+      if (proxyRes.ok) {
+        const proxyData = await proxyRes.json();
+        if (proxyData.results && proxyData.results.length > 0) {
+          return {
+            results: proxyData.results,
+            isFallback: Boolean(proxyData.isFallback)
+          };
+        }
+      }
+    } catch {
+      // Endpoint proxy tidak terjangkau (misal: mode standalone vite dev tanpa serverless), lanjut ke client API
+    }
+
+    // 2. Jika no valid API key is set, use fallback search
     if (!this.hasApiKey()) {
       const lower = q.toLowerCase();
       const filtered = FALLBACK_POPULAR_SONGS.filter(
@@ -80,6 +96,7 @@ export const youtubeService = {
       };
     }
 
+    // 3. Fallback pemanggilan langsung dari client (hanya jika proxy tidak aktif)
     try {
       const endpoint = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoEmbeddable=true&maxResults=6&q=${encodeURIComponent(
         q
@@ -91,7 +108,6 @@ export const youtubeService = {
         const message = errorData?.error?.message || `HTTP error ${res.status}`;
         console.warn('YouTube API call failed:', message);
 
-        // Fallback to sample songs on quota exhaustion or error
         const lower = q.toLowerCase();
         const filtered = FALLBACK_POPULAR_SONGS.filter(
           item => item.title.toLowerCase().includes(lower) || item.channelTitle.toLowerCase().includes(lower)
@@ -99,7 +115,7 @@ export const youtubeService = {
         return {
           results: filtered.length > 0 ? filtered : FALLBACK_POPULAR_SONGS.slice(0, 4),
           isFallback: true,
-          error: `Kuota API habis atau gagal: ${message}. Menampilkan hasil contoh.`
+          error: `Kuota API habis atau dibatasi: ${message}. Menampilkan hasil contoh.`
         };
       }
 
