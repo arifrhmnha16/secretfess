@@ -628,49 +628,6 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
           </div>
         )}
 
-        {/* ========================================================
-            RULES DISCLAIMER & MANDATORY ACCEPTANCE BOX (Above Form)
-        ======================================================== */}
-        <div className="editorial-card p-5 bg-[#FAF8F5] border border-[#2D160E] space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <ShieldAlert size={18} className="text-[#E85B88] shrink-0" />
-              <h3 className="text-sm font-black text-[#2D160E]">
-                Wajib Baca Peraturan Komunitas
-              </h3>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setShowRulesModal(true)}
-              className="btn btn-white btn-sm flex items-center gap-1.5 self-start sm:self-auto text-xs font-bold"
-            >
-              <BookOpen size={13} />
-              <span>Buka Ketentuan & Rules</span>
-            </button>
-          </div>
-
-          <p className="text-xs text-[#6B5347] leading-relaxed font-medium">
-            Untuk menjaga kenyamanan bersama, dilarang keras mengirimkan ujaran kebencian, SARA, bullying, 
-            dan penyebaran data pribadi (doxxing). Kiriman yang melanggar akan langsung ditolak pengurus.
-          </p>
-
-          {/* Mandatory Checkbox */}
-          <div className="pt-2 border-t border-[#2D160E]/15">
-            <label className="flex items-start gap-2.5 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                checked={rulesAccepted}
-                onChange={(e) => setRulesAccepted(e.target.checked)}
-                className="w-4 h-4 mt-0.5 accent-[#E85B88] rounded cursor-pointer shrink-0"
-              />
-              <span className="text-xs font-bold text-[#2D160E] leading-normal">
-                Saya telah membaca, memahami, dan berjanji mematuhi seluruh peraturan HIMASEFESS.
-                {!rulesAccepted && <span className="text-[#E85B88] ml-1">(Wajib dicentang)</span>}
-              </span>
-            </label>
-          </div>
-        </div>
 
         {/* Rate Limiting Notice */}
         {cooldownRemaining > 0 && (
@@ -1105,6 +1062,50 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
               />
             </div>
           )}
+
+          {/* ========================================================
+              RULES DISCLAIMER & MANDATORY ACCEPTANCE BOX (Before Submit)
+          ======================================================== */}
+          <div className="editorial-card p-5 bg-[#FAF8F5] border border-[#2D160E] space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <ShieldAlert size={18} className="text-[#E85B88] shrink-0" />
+                <h3 className="text-sm font-black text-[#2D160E]">
+                  Wajib Baca Peraturan Komunitas
+                </h3>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowRulesModal(true)}
+                className="btn btn-white btn-sm flex items-center gap-1.5 self-start sm:self-auto text-xs font-bold"
+              >
+                <BookOpen size={13} />
+                <span>Buka Ketentuan & Rules</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-[#6B5347] leading-relaxed font-medium">
+              Untuk menjaga kenyamanan bersama, dilarang keras mengirimkan ujaran kebencian, SARA, bullying, 
+              dan penyebaran data pribadi (doxxing). Kiriman yang melanggar akan langsung ditolak pengurus.
+            </p>
+
+            {/* Mandatory Checkbox */}
+            <div className="pt-2 border-t border-[#2D160E]/15">
+              <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rulesAccepted}
+                  onChange={(e) => setRulesAccepted(e.target.checked)}
+                  className="w-4 h-4 mt-0.5 accent-[#E85B88] rounded cursor-pointer shrink-0"
+                />
+                <span className="text-xs font-bold text-[#2D160E] leading-normal">
+                  Saya telah membaca, memahami, dan berjanji mematuhi seluruh peraturan HIMASEFESS.
+                  {!rulesAccepted && <span className="text-[#E85B88] ml-1">(Wajib dicentang)</span>}
+                </span>
+              </label>
+            </div>
+          </div>
 
           {/* Submit Action Button */}
           <div className="pt-3">
