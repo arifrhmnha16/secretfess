@@ -72,12 +72,18 @@ export const telegramService = {
    * Generates interactive inline keyboard buttons for Telegram moderator group
    */
   getInlineKeyboard(trackingCode: string) {
-    const adminUrl = typeof window !== 'undefined' && window.location?.origin 
-      ? `${window.location.origin}/?admin=himase2026` 
-      : 'http://localhost:5173/?admin=himase2026';
+    const baseUrl = typeof window !== 'undefined' && window.location?.origin 
+      ? window.location.origin 
+      : 'https://secretfess.vercel.app';
+
+    const generateUrl = `${baseUrl}/?admin=himase2026&preview=${encodeURIComponent(trackingCode)}`;
+    const adminUrl = `${baseUrl}/?admin=himase2026`;
 
     return {
       inline_keyboard: [
+        [
+          { text: '🖼️ Generate Desain Kartu (Unduh HD) 📥', url: generateUrl }
+        ],
         [
           { text: '🎨 Tandai Designed', callback_data: `mod:designed:${trackingCode}` },
           { text: '✅ Siap Tayang (Ready)', callback_data: `mod:ready:${trackingCode}` }
@@ -87,7 +93,7 @@ export const telegramService = {
           { text: '❌ Tolak (Reject)', callback_data: `mod:reject:${trackingCode}` }
         ],
         [
-          { text: '🌐 Buka Web Admin', url: adminUrl }
+          { text: '🌐 Dashboard Web Admin', url: adminUrl }
         ]
       ]
     };

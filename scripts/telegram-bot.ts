@@ -247,7 +247,7 @@ function buildPanelContent(stats: Awaited<ReturnType<typeof getStats>>) {
         { text: '🔢 Kuota 100', callback_data: 'ctrl:set_quota:100' }
       ],
       [
-        { text: '🌐 Buka Web Admin Panel', url: 'http://localhost:5173/?admin=himase2026' }
+        { text: '🌐 Buka Web Admin Panel', url: 'https://secretfess.vercel.app/?admin=himase2026' }
       ]
     ]
   };
@@ -256,15 +256,21 @@ function buildPanelContent(stats: Awaited<ReturnType<typeof getStats>>) {
 }
 
 function buildSubmissionButtons(trackingCode: string) {
+  const cleanCode = trackingCode.trim().toUpperCase().replace(/^#/, '');
+  const generateUrl = `https://secretfess.vercel.app/?admin=himase2026&preview=${cleanCode}`;
+
   return {
     inline_keyboard: [
       [
-        { text: '🎨 Tandai Designed', callback_data: `mod:designed:${trackingCode}` },
-        { text: '✅ Siap Tayang (Ready)', callback_data: `mod:ready:${trackingCode}` }
+        { text: '🖼️ Generate Desain Kartu (Unduh HD) 📥', url: generateUrl }
       ],
       [
-        { text: '🚀 Sudah Tayang (Posted)', callback_data: `mod:posted:${trackingCode}` },
-        { text: '❌ Tolak (Reject)', callback_data: `mod:reject:${trackingCode}` }
+        { text: '🎨 Tandai Designed', callback_data: `mod:designed:${cleanCode}` },
+        { text: '✅ Siap Tayang (Ready)', callback_data: `mod:ready:${cleanCode}` }
+      ],
+      [
+        { text: '🚀 Sudah Tayang (Posted)', callback_data: `mod:posted:${cleanCode}` },
+        { text: '❌ Tolak (Reject)', callback_data: `mod:reject:${cleanCode}` }
       ]
     ]
   };
@@ -501,6 +507,34 @@ Berikut daftar perintah yang dapat kamu gunakan:
       });
 
       await sendMessage(chatId, `✅ <b>Tiket #${item.trackingCode} berhasil diubah statusnya menjadi: ${newStatus}</b>\nCatatan: <i>${note}</i>`);
+      break;
+    }
+
+    case '/generate':
+    case '/unduh': {
+      if (!arg1) {
+        await sendMessage(chatId, '⚠️ Masukkan kode tiket. Contoh: <code>/generate SF-2026-8691</code>');
+        return;
+      }
+      const item = await findSubmissionByCode(arg1);
+      if (!item) {
+        await sendMessage(chatId, `❌ Kiriman dengan kode <code>#${arg1}</code> tidak ditemukan.`);
+        return;
+      }
+      const generateUrl = `https://secretfess.vercel.app/?admin=himase2026&preview=${item.trackingCode}`;
+      await sendMessage(
+        chatId, 
+        `🖼️ <b>GENERATE DESAIN KARTU #${item.trackingCode}</b>\n` +
+        `• <b>Untuk:</b> ${item.recipient}\n` +
+        `• <b>Dari:</b> ${item.isAnonymous ? '<i>Anonim</i>' : item.senderAlias}\n\n` +
+        `Klik tombol di bawah untuk membuka kartu visual dan download gambar PNG HD:`,
+        {
+          inline_keyboard: [
+            [{ text: '📥 Buka & Unduh Kartu HD (PNG)', url: generateUrl }],
+            [{ text: '🎨 Tandai Designed', callback_data: `mod:designed:${item.trackingCode}` }]
+          ]
+        }
+      );
       break;
     }
 

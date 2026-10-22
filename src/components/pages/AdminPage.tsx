@@ -26,6 +26,13 @@ interface AdminPageProps {
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpdated }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('admin') === ADMIN_PASSCODE || params.get('passcode') === ADMIN_PASSCODE) {
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+        return true;
+      }
+    }
     return sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
   });
   const [passcode, setPasscode] = useState('');
@@ -103,6 +110,21 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
       }, 15000);
 
       return () => clearInterval(refreshTimer);
+    }
+  }, [isAuthenticated]);
+
+  // Auto-open visual card preview from URL (e.g. from Telegram "Generate Desain" button link)
+  useEffect(() => {
+    if (isAuthenticated && typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const previewCode = params.get('preview') || params.get('code') || params.get('ticket');
+      if (previewCode) {
+        submissionService.getSubmissionByCode(previewCode).then((item) => {
+          if (item) {
+            setPreviewItem(item);
+          }
+        });
+      }
     }
   }, [isAuthenticated]);
 
