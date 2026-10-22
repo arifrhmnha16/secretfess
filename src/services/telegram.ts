@@ -43,7 +43,7 @@ export const telegramService = {
     messageBody += `<b>Kode Tiket:</b> <code>#${submission.trackingCode}</code>\n`;
     messageBody += `<b>Waktu:</b> ${dateStr} WIB\n`;
     messageBody += `<b>Untuk:</b> ${submission.recipient}\n`;
-    messageBody += `<b>Dari:</b> ${submission.isAnonymous ? '<i>Anonim</i>' : submission.senderAlias}\n\n`;
+    messageBody += `<b>Dari:</b> ${submission.isAnonymous ? '<i>Anonim</i>' : (submission.senderAlias || '<i>Anonim</i>')}\n\n`;
 
     if (isSong && submission.songData) {
       messageBody += `<b>Lagu (YouTube):</b> ${submission.songData.title}\n`;

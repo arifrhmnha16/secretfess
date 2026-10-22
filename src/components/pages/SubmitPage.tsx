@@ -74,7 +74,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
 }) => {
   const [submissionType, setSubmissionType] = useState<SubmissionType>(initialType);
   const [recipient, setRecipient] = useState('');
-  const [isAnonymous, setIsAnonymous] = useState(true);
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [senderAlias, setSenderAlias] = useState('');
   const [message, setMessage] = useState('');
   const theme: CardTheme = 'pink_cream';
@@ -377,7 +377,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
       return 'Harap isi nama atau inisial penerima (Untuk Siapa).';
     }
     if (!isAnonymous && !senderAlias.trim()) {
-      return 'Jika tidak anonim, harap isi nama samaran atau alias pengirim.';
+      return 'Harap isi nama pengirim atau centang "Kirim sebagai Anonim".';
     }
     if (submissionType === 'menfess') {
       if (!message.trim() || message.trim().length < 5) {
@@ -470,7 +470,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
             trackingCode,
             type: submissionType,
             recipient: recipient.trim(),
-            senderAlias: isAnonymous ? 'Anonim' : senderAlias.trim(),
+            senderAlias: isAnonymous ? 'Anonim' : (senderAlias.trim() || 'Anonim'),
             isAnonymous,
             category: 'general',
             message: finalMessage,
@@ -495,7 +495,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
         trackingCode,
         type: submissionType,
         recipient: recipient.trim(),
-        senderAlias: isAnonymous ? 'Anonim' : senderAlias.trim(),
+        senderAlias: isAnonymous ? 'Anonim' : (senderAlias.trim() || 'Anonim'),
         isAnonymous,
         category: 'general',
         message: finalMessage,
@@ -714,37 +714,52 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
             </div>
 
             {/* Sender Identity */}
-            <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#2D160E] space-y-2">
-              <label className="flex items-center gap-2 cursor-pointer select-none">
+            <div className="p-3.5 sm:p-4 rounded-xl bg-[#FAF8F5] border border-[#2D160E] space-y-3">
+              <div>
+                <label className="input-label flex items-center justify-between">
+                  <span>Nama Pengirim / Alias {!isAnonymous && <span className="text-[#E85B88]">*</span>}</span>
+                  <span className="text-[11px] font-normal text-[#6B5347]">
+                    {isAnonymous ? 'Mode Anonim Aktif' : 'Contoh: Ahmad, Teman Sebangku, dll.'}
+                  </span>
+                </label>
                 <input
-                  type="checkbox"
-                  checked={isAnonymous}
-                  onChange={(e) => setIsAnonymous(e.target.checked)}
-                  className="w-4 h-4 accent-[#E85B88] rounded cursor-pointer"
+                  type="text"
+                  value={isAnonymous ? 'Anonim' : senderAlias}
+                  onChange={(e) => {
+                    if (!isAnonymous) setSenderAlias(e.target.value);
+                  }}
+                  disabled={isAnonymous}
+                  placeholder="Ketik nama atau panggilanmu..."
+                  className={`editorial-input text-xs sm:text-sm transition-all ${
+                    isAnonymous ? 'bg-[#F0ECE4] text-[#8C7A70] italic cursor-not-allowed border-dashed' : 'bg-white'
+                  }`}
+                  maxLength={50}
+                  required={!isAnonymous}
                 />
-                <span className="text-xs sm:text-sm font-bold text-[#2D160E]">
-                  Kirim secara 100% Anonim
-                </span>
-                <span className="pill-badge pill-white text-[10px] py-0.5 px-2">
-                  Identitas Rahasia
-                </span>
-              </label>
+              </div>
 
-              {!isAnonymous && (
-                <div className="pt-1.5">
-                  <label className="input-label text-xs">
-                    Nama Samaran / Alias Pengirim <span className="text-[#E85B88]">*</span>
-                  </label>
+              <div className="pt-1 border-t border-[#2D160E]/15">
+                <label className="flex items-center gap-2 cursor-pointer select-none">
                   <input
-                    type="text"
-                    value={senderAlias}
-                    onChange={(e) => setSenderAlias(e.target.value)}
-                    placeholder="Contoh: Teman Sebangkumu, Secret Admirer..."
-                    className="editorial-input text-xs sm:text-sm"
-                    maxLength={50}
+                    type="checkbox"
+                    checked={isAnonymous}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setIsAnonymous(checked);
+                      if (checked) {
+                        setSenderAlias('');
+                      }
+                    }}
+                    className="w-4 h-4 accent-[#E85B88] rounded cursor-pointer"
                   />
-                </div>
-              )}
+                  <span className="text-xs sm:text-sm font-bold text-[#2D160E]">
+                    Kirim sebagai Anonim (Sembunyikan nama asli / alias)
+                  </span>
+                  <span className="pill-badge pill-white text-[10px] py-0.5 px-2">
+                    Identitas Rahasia
+                  </span>
+                </label>
+              </div>
             </div>
 
             {/* Songfess Dedicated YouTube Search & Trim Section */}
@@ -1312,7 +1327,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
           <LiveCardPreview
             type={submissionType}
             recipient={recipient.trim()}
-            senderAlias={senderAlias.trim()}
+            senderAlias={isAnonymous ? 'Anonim' : (senderAlias.trim() || 'Anonim')}
             isAnonymous={isAnonymous}
             category="general"
             message={submissionType === 'songfess' && selectedVideo

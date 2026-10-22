@@ -274,7 +274,7 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
               </p>
               <p className="font-hand text-sm sm:text-base font-bold text-[#2D160E]">
                 {isAnonymous 
-                  ? 'Seseorang yang mengagumi dalam diam' 
+                  ? 'Anonim' 
                   : (senderAlias.trim() ? senderAlias : 'Anonim')}
               </p>
             </div>

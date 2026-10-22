@@ -280,7 +280,7 @@ export const cloudinaryService = {
 
       ctx.fillStyle = '#2D160E';
       ctx.font = 'italic 700 32px "Plus Jakarta Sans", sans-serif';
-      const sender = submission.isAnonymous ? 'Seseorang yang mengagumi dalam diam' : submission.senderAlias;
+      const sender = submission.isAnonymous ? 'Anonim' : (submission.senderAlias || 'Anonim');
       ctx.fillText(sender, cardX + 60, cardY + cardH - 50);
 
       // Watermark right
@@ -432,7 +432,7 @@ export const cloudinaryService = {
 
       ctx.fillStyle = '#2D160E';
       ctx.font = 'italic 700 32px "Plus Jakarta Sans", sans-serif';
-      const sender = submission.isAnonymous ? 'Seseorang yang mengagumi dalam diam' : submission.senderAlias;
+      const sender = submission.isAnonymous ? 'Anonim' : (submission.senderAlias || 'Anonim');
       ctx.fillText(sender, cardX + 60, cardY + cardH - 60);
 
       // Watermark right

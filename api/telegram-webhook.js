@@ -401,7 +401,7 @@ export default async function handler(req, res) {
         caption += `──────────────────────────────\n`;
         caption += `📌 <b>Tipe:</b> ${isSong ? 'Songfess 🎵' : 'Menfess 💌'}\n`;
         caption += `👤 <b>Untuk:</b> ${item.recipient}\n`;
-        caption += `💌 <b>Dari:</b> ${item.isAnonymous ? '<i>Anonim</i>' : item.senderAlias}\n`;
+        caption += `💌 <b>Dari:</b> ${item.isAnonymous ? '<i>Anonim</i>' : (item.senderAlias || '<i>Anonim</i>')}\n`;
         if (isSong && item.songData) {
           caption += `🎶 <b>Lagu:</b> ${item.songData.title} (${item.songData.artist})\n`;
           if (item.songData.formattedTimeRange) {
@@ -590,7 +590,7 @@ export default async function handler(req, res) {
         await sendMessage(chatId, `⏳ <b>Daftar ${pendingItems.length} Kiriman Pending Terbaru:</b>`, null, messageId);
         for (const item of pendingItems) {
           let msg = `<b>[${item.type.toUpperCase()}]</b> <code>#${item.trackingCode}</code>\n`;
-          msg += `<b>Untuk:</b> ${item.recipient} | <b>Dari:</b> ${item.isAnonymous ? '<i>Anonim</i>' : item.senderAlias}\n`;
+          msg += `<b>Untuk:</b> ${item.recipient} | <b>Dari:</b> ${item.isAnonymous ? '<i>Anonim</i>' : (item.senderAlias || '<i>Anonim</i>')}\n`;
           if (item.songData) {
             msg += `<b>Lagu:</b> ${item.songData.title} (${item.songData.artist})\n`;
           }
@@ -703,7 +703,7 @@ Berikut daftar perintah yang dapat kamu gunakan:
           await sendPhoto(
             chatId, 
             item.cardImageUrl, 
-            `🖼️ <b>Desain Kartu #${item.trackingCode}</b>\n• <b>Untuk:</b> ${item.recipient}\n• <b>Dari:</b> ${item.isAnonymous ? 'Anonim' : item.senderAlias}\n\nSiap diposting ke Instagram Story! 🚀`,
+            `🖼️ <b>Desain Kartu #${item.trackingCode}</b>\n• <b>Untuk:</b> ${item.recipient}\n• <b>Dari:</b> ${item.isAnonymous ? 'Anonim' : (item.senderAlias || 'Anonim')}\n\nSiap diposting ke Instagram Story! 🚀`,
             buildSubmissionButtons(item.trackingCode),
             msg.message_id
           );
@@ -836,7 +836,7 @@ Berikut daftar perintah yang dapat kamu gunakan:
         await sendMessage(chatId, `⏳ <b>Daftar ${pendingItems.length} Kiriman Pending Terbaru:</b>`, null, msg.message_id);
         for (const item of pendingItems) {
           let pMsg = `<b>[${item.type.toUpperCase()}]</b> <code>#${item.trackingCode}</code>\n`;
-          pMsg += `<b>Untuk:</b> ${item.recipient} | <b>Dari:</b> ${item.isAnonymous ? '<i>Anonim</i>' : item.senderAlias}\n`;
+          pMsg += `<b>Untuk:</b> ${item.recipient} | <b>Dari:</b> ${item.isAnonymous ? '<i>Anonim</i>' : (item.senderAlias || '<i>Anonim</i>')}\n`;
           if (item.songData) {
             pMsg += `<b>Lagu:</b> ${item.songData.title} (${item.songData.artist})\n`;
           }
@@ -867,7 +867,7 @@ Berikut daftar perintah yang dapat kamu gunakan:
         detailMsg += `<b>Tipe:</b> ${item.type.toUpperCase()}\n`;
         detailMsg += `<b>Status:</b> <b>${item.status}</b>\n`;
         detailMsg += `<b>Penerima:</b> ${item.recipient}\n`;
-        detailMsg += `<b>Pengirim:</b> ${item.isAnonymous ? '<i>Anonim</i>' : item.senderAlias}\n`;
+        detailMsg += `<b>Pengirim:</b> ${item.isAnonymous ? '<i>Anonim</i>' : (item.senderAlias || '<i>Anonim</i>')}\n`;
         detailMsg += `<b>Kategori:</b> ${item.category}\n\n`;
 
         if (item.songData) {
