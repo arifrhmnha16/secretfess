@@ -132,9 +132,11 @@ async function safeUpdateSubmission(id, updates) {
   }
 }
 
-async function findSubmissionByCode(code) {
+async function findSubmissionByCode(code, fallbackMessageText) {
   if (!code) return null;
   const clean = code.trim().toUpperCase().replace(/^#/, '');
+  
+  // 1. Coba cari di Firestore lewat query trackingCode
   try {
     const q = query(collection(db, 'submissions'), where('trackingCode', '==', clean), limit(1));
     const snap = await getDocs(q);
@@ -142,9 +144,87 @@ async function findSubmissionByCode(code) {
       const d = snap.docs[0];
       return { ...d.data(), id: d.id };
     }
+    // Coba langsung lewat doc ID
+    const directDoc = await getDoc(doc(db, 'submissions', clean));
+    if (directDoc.exists()) {
+      return { ...directDoc.data(), id: directDoc.id };
+    }
   } catch (err) {
     console.warn('[Firestore findSubmission warning]:', err.message);
   }
+
+  // 2. Cek apakah gambar kartu sudah ter-upload di Cloudinary
+  const cloudName = process.env.VITE_CLOUDINARY_CLOUD_NAME || 'dzkopapli';
+  const expectedCloudUrl = `https://res.cloudinary.com/${cloudName}/image/upload/himasefess_cards/himasefess_${clean}`;
+  
+  let hasCloudImage = false;
+  try {
+    const headRes = await fetch(expectedCloudUrl, { method: 'HEAD' });
+    if (headRes.ok) {
+      hasCloudImage = true;
+    }
+  } catch (e) {
+    console.warn('Cloudinary HEAD check warning:', e.message);
+  }
+
+  // Jika ada teks pesan dari Telegram atau gambar Cloudinary ditemukan, auto-rekonstruksi kiriman
+  if (fallbackMessageText || hasCloudImage) {
+    let recipient = 'Pengunjung';
+    let senderAlias = 'Anonim';
+    let message = 'Pesan Songfess';
+    let isSong = false;
+    let songData = null;
+
+    if (fallbackMessageText) {
+      if (fallbackMessageText.includes('[NEW SONGFESS]')) isSong = true;
+      const matchRecipient = fallbackMessageText.match(/Untuk:\s*(.+)/i);
+      if (matchRecipient) recipient = matchRecipient[1].trim();
+
+      const matchSender = fallbackMessageText.match(/Dari:\s*(.+)/i);
+      if (matchSender) senderAlias = matchSender[1].replace(/<[^>]+>/g, '').trim();
+
+      const matchBlock = fallbackMessageText.match(/<blockquote>([\s\S]*?)<\/blockquote>/i);
+      if (matchBlock) {
+        message = matchBlock[1].trim();
+      } else {
+        const matchPesan = fallbackMessageText.match(/Pesan Pengirim:\s*\n*"?([^"]+)"?/i);
+        if (matchPesan) message = matchPesan[1].trim();
+      }
+
+      const matchLagu = fallbackMessageText.match(/Lagu[^:]*:\s*(.+)/i);
+      const matchArtis = fallbackMessageText.match(/Channel \/ Artis:\s*(.+)/i);
+      if (matchLagu || matchArtis) {
+        songData = {
+          title: matchLagu ? matchLagu[1].trim() : 'Musik Pilihan',
+          artist: matchArtis ? matchArtis[1].trim() : 'Artist'
+        };
+      }
+    }
+
+    const recovered = {
+      id: clean,
+      trackingCode: clean,
+      type: isSong ? 'songfess' : 'menfess',
+      recipient,
+      senderAlias,
+      isAnonymous: senderAlias.toLowerCase() === 'anonim',
+      message,
+      songData,
+      cardImageUrl: hasCloudImage ? expectedCloudUrl : null,
+      status: 'PENDING',
+      createdAt: new Date().toISOString()
+    };
+
+    // Auto-save recovered item ke Firestore
+    try {
+      await setDoc(doc(db, 'submissions', clean), recovered, { merge: true });
+    } catch (saveErr) {
+      console.warn('Recovered item auto-save warning:', saveErr.message);
+    }
+
+    return recovered;
+  }
+
   return null;
 }
 
@@ -308,7 +388,8 @@ export default async function handler(req, res) {
           messageId
         );
 
-        const item = await findSubmissionByCode(code);
+        const fallbackText = cb.message?.text || cb.message?.caption || '';
+        const item = await findSubmissionByCode(code, fallbackText);
         if (!item) {
           if (progressMsg?.result?.message_id) await deleteMessage(chatId, progressMsg.result.message_id);
           await sendMessage(chatId, `❌ Kiriman dengan kode <code>#${code}</code> tidak ditemukan di database.`, null, messageId);
@@ -382,7 +463,8 @@ export default async function handler(req, res) {
         await answerCallbackQuery(cb.id, `⏳ Sedang memproses update status #${code}...`);
         await sendChatAction(chatId, 'typing');
 
-        const item = await findSubmissionByCode(code);
+        const fallbackText = cb.message?.text || cb.message?.caption || '';
+        const item = await findSubmissionByCode(code, fallbackText);
         if (!item) {
           await answerCallbackQuery(cb.id, `Tiket #${code} tidak ditemukan`, true);
           return res.status(200).json({ ok: true });
