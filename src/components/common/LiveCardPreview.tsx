@@ -274,32 +274,34 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
                 </p>
               </div>
             ) : (
-              /* Single Songfess Box: clean placeholder containing only song title, artist, and seconds/timestamp (no cover/artwork) */
-              <div className="my-auto py-2 flex items-center justify-center w-full">
-                <div className="relative w-full max-w-[250px] sm:max-w-[260px]">
-                  {/* Exact rounded solid shadow underlay */}
-                  <div 
-                    className="absolute inset-0 rounded-2xl bg-[#2D160E] translate-x-[2.5px] translate-y-[2.5px] pointer-events-none"
-                    aria-hidden="true"
-                  />
-                  {/* The Single Song Box */}
-                  <div className="relative z-10 w-full rounded-2xl border-[1.75px] border-[#2D160E] bg-white py-6 px-4 flex flex-col items-center justify-center text-center space-y-3">
-                    {/* Song Title & Artist */}
-                    <div className="space-y-1 px-1 w-full">
-                      <h4 className="text-sm sm:text-base font-black text-[#2D160E] leading-snug line-clamp-2">
-                        {songData?.title?.trim() ? songData.title : 'Judul Lagu Pilihan'}
-                      </h4>
-                      <p className="text-xs font-bold text-[#6B5347] truncate max-w-[200px] mx-auto">
-                        {songData?.artist?.trim() ? songData.artist : 'Nama Artis / Band'}
-                      </p>
-                    </div>
-
-                    {/* Timestamp Pill (Detik) */}
-                    <div className="pt-0.5">
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#FAF8F5] border border-[#2D160E]/20 text-[10px] sm:text-[11px] font-mono font-bold text-[#2D160E] shadow-[1px_1px_0_#2D160E]">
-                        ⏱️ <span className="text-[#800020]">{songData?.formattedTimeRange || (songData?.favoriteTimestamp ? songData.favoriteTimestamp : '00:00 - 00:15')}</span>{' '}
-                        <span className="text-[#6B5347] font-medium">({songData?.duration ? `${songData.duration}s` : '15s'})</span>
-                      </span>
+              /* Outer Frame Box that holds the 1:1 music box (shifted up to leave space underneath for manual title) */
+              <div className="relative w-full max-w-[270px] mx-auto min-h-[220px] sm:min-h-[240px]">
+                <div 
+                  className="absolute inset-0 rounded-2xl bg-[#2D160E] translate-x-[2.5px] translate-y-[2.5px] pointer-events-none"
+                  aria-hidden="true"
+                />
+                <div className="relative z-10 w-full h-full pt-4 sm:pt-5 pb-12 sm:pb-14 px-4 rounded-2xl border-[1.75px] border-[#2D160E] bg-[#FAF8F5] flex flex-col items-center justify-start">
+                  {/* Compact 1:1 Square Box inside (a bit smaller) */}
+                  <div className="relative w-[112px] sm:w-[120px] aspect-square">
+                    <div 
+                      className="absolute inset-0 rounded-xl bg-[#2D160E] translate-x-[1.5px] translate-y-[1.5px] pointer-events-none"
+                      aria-hidden="true"
+                    />
+                    <div className="relative z-10 w-full h-full rounded-xl border-[1.5px] border-[#2D160E] bg-white p-2 flex flex-col items-center justify-center text-center space-y-1 transition-all">
+                      <div className="space-y-0.5 px-0.5">
+                        <h4 className="text-[10px] font-black text-[#2D160E] leading-tight line-clamp-2">
+                          {songData?.title?.trim() ? songData.title : 'Judul Lagu Pilihan'}
+                        </h4>
+                        <p className="text-[9px] font-bold text-[#6B5347] truncate max-w-[98px]">
+                          {songData?.artist?.trim() ? songData.artist : 'Nama Artis / Band'}
+                        </p>
+                      </div>
+                      <div className="pt-0.5">
+                        <span className="inline-block px-1.5 py-0.5 rounded bg-[#FAF8F5] border border-[#2D160E]/20 text-[8.5px] font-mono font-bold text-[#2D160E]">
+                          ⏱️ <span className="text-[#800020]">{songData?.formattedTimeRange || (songData?.favoriteTimestamp ? songData.favoriteTimestamp : '00:00 - 00:15')}</span>{' '}
+                          <span className="text-[#6B5347] font-medium">({songData?.duration ? `${songData.duration}s` : '15s'})</span>
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
