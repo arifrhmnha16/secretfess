@@ -274,54 +274,48 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
                 </p>
               </div>
             ) : (
-              /* Center Songfess Section: Balanced vertical spacing with well-proportioned music frame */
-              <div className="flex-1 flex flex-col justify-center items-center my-auto py-2 w-full">
-                <div className="relative w-full max-w-[270px] sm:max-w-[280px] h-[290px] sm:h-[305px]">
+              /* Single Songfess Placeholder Box: only one clean box for the song with zero outer clutter */
+              <div className="my-auto py-2 flex items-center justify-center w-full">
+                <div className="relative w-[210px] sm:w-[220px]">
+                  {/* Exact rounded solid shadow underlay */}
                   <div 
                     className="absolute inset-0 rounded-2xl bg-[#2D160E] translate-x-[2.5px] translate-y-[2.5px] pointer-events-none"
                     aria-hidden="true"
                   />
-                  <div className="relative z-10 w-full h-full p-4 rounded-2xl border-[1.75px] border-[#2D160E] bg-[#FAF8F5] flex flex-col items-center justify-between">
-                    {/* Compact 1:1 Album Artwork / Video Thumbnail Box */}
-                    <div className="relative w-[130px] sm:w-[138px] aspect-square rounded-xl overflow-hidden border-[1.5px] border-[#2D160E] bg-white shadow-[1.5px_1.5px_0_#2D160E] flex items-center justify-center">
+                  {/* The Single Song Box */}
+                  <div className="relative z-10 w-full rounded-2xl border-[1.75px] border-[#2D160E] bg-white p-3.5 flex flex-col items-center justify-center text-center space-y-2">
+                    {/* 1:1 Album Artwork / Video Thumbnail */}
+                    <div className="w-[125px] sm:w-[135px] aspect-square rounded-xl overflow-hidden border-[1.5px] border-[#2D160E] bg-[#FAF8F5] flex items-center justify-center shadow-[1px_1px_0_#2D160E]">
                       {songData?.thumbnailUrl ? (
                         <img 
                           src={songData.thumbnailUrl} 
-                          alt={songData?.title || 'Song thumbnail'} 
+                          alt={songData?.title || 'Song artwork'} 
                           className="w-full h-full object-cover"
                           crossOrigin="anonymous"
                         />
                       ) : (
                         <div className="w-full h-full bg-[#800020]/10 flex flex-col items-center justify-center p-2 text-center">
-                          <Music size={28} className="text-[#800020] mb-1" />
+                          <Music size={26} className="text-[#800020] mb-1" />
                           <span className="text-[9px] font-bold text-[#800020]">Songfess Track</span>
                         </div>
                       )}
-                      {/* Audio indicator badge */}
-                      <div className="absolute bottom-1.5 left-1.5 bg-[#2D160E]/85 backdrop-blur-xs text-white px-1.5 py-0.5 rounded text-[8px] font-mono flex items-center gap-1">
-                        <span className="inline-block w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
-                        <span>AUDIO</span>
-                      </div>
                     </div>
 
                     {/* Song Title & Artist */}
-                    <div className="text-center w-full px-1 space-y-0.5">
+                    <div className="space-y-0.5 px-1 w-full">
                       <h4 className="text-xs sm:text-[13px] font-black text-[#2D160E] leading-tight line-clamp-1">
                         {songData?.title?.trim() ? songData.title : 'Judul Lagu Pilihan'}
                       </h4>
-                      <p className="text-[10px] sm:text-[11px] font-bold text-[#6B5347] truncate max-w-[210px] mx-auto">
+                      <p className="text-[10px] sm:text-[11px] font-bold text-[#6B5347] truncate max-w-[190px] mx-auto">
                         {songData?.artist?.trim() ? songData.artist : 'Nama Artis / Band'}
                       </p>
                     </div>
 
-                    {/* Timestamp & IG Sticker Guideline */}
-                    <div className="flex flex-col items-center gap-1 w-full pt-0.5">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white border border-[#2D160E]/30 text-[9px] font-mono font-bold text-[#2D160E] shadow-[1px_1px_0_#2D160E]/20">
+                    {/* Timestamp Pill */}
+                    <div className="pt-0.5">
+                      <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#FAF8F5] border border-[#2D160E]/20 text-[9px] font-mono font-bold text-[#2D160E]">
                         ⏱️ <span className="text-[#800020]">{songData?.formattedTimeRange || (songData?.favoriteTimestamp ? songData.favoriteTimestamp : '00:00 - 00:15')}</span>{' '}
                         <span className="text-[#6B5347] font-medium">({songData?.duration ? `${songData.duration}s` : '15s'})</span>
-                      </span>
-                      <span className="text-[8.5px] font-semibold text-[#9A8077] italic tracking-tight">
-                        🎵 Area penempelan sticker musik IG Story
                       </span>
                     </div>
                   </div>
