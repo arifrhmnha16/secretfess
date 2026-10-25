@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Download, Heart, Loader2 } from 'lucide-react';
+import { Download, Heart, Loader2, Music } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import type { CardTheme, SongData, SubmissionCategory } from '../../types';
 import { 
@@ -178,7 +178,11 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
       {/* Outer Card Export Canvas: Fully encapsulates the card box, border, shadow, tape, and doodles without clipping */}
       <div 
         ref={cardRef}
-        className="p-4 sm:p-5 flex items-center justify-center bg-[#FAF7F2] rounded-3xl"
+        className={`flex items-center justify-center bg-[#FAF7F2] rounded-3xl transition-all ${
+          type === 'songfess' 
+            ? 'pt-16 sm:pt-20 pb-8 px-4 sm:px-5' 
+            : 'p-4 sm:p-5'
+        }`}
       >
         <div 
           className={`relative ${
@@ -212,7 +216,7 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
             </div>
 
             {/* Top Header Section */}
-            <div className="space-y-2.5 pt-1">
+            <div className="space-y-3 pt-1">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-black tracking-wider text-[#2D160E] uppercase flex items-center gap-1">
                   <span>Se.Cretfess</span>
@@ -257,8 +261,8 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
             </div>
 
             {/* Center Content Section */}
-            <div className="my-auto py-2 space-y-3">
-              {type === 'menfess' ? (
+            {type === 'menfess' ? (
+              <div className="my-auto py-2 space-y-3">
                 <p className="text-sm sm:text-base font-extrabold text-[#2D160E] leading-snug break-words">
                   {message.trim() ? (
                     message
@@ -268,41 +272,62 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
                     </span>
                   )}
                 </p>
-              ) : (
-                /* Outer Frame Box that holds the 1:1 music box (shifted up to leave space underneath for manual title) */
-                <div className="relative w-full max-w-[270px] mx-auto min-h-[220px] sm:min-h-[240px]">
+              </div>
+            ) : (
+              /* Center Songfess Section: Balanced vertical spacing with well-proportioned music frame */
+              <div className="flex-1 flex flex-col justify-center items-center my-auto py-2 w-full">
+                <div className="relative w-full max-w-[270px] sm:max-w-[280px] h-[290px] sm:h-[305px]">
                   <div 
                     className="absolute inset-0 rounded-2xl bg-[#2D160E] translate-x-[2.5px] translate-y-[2.5px] pointer-events-none"
                     aria-hidden="true"
                   />
-                  <div className="relative z-10 w-full h-full pt-4 sm:pt-5 pb-12 sm:pb-14 px-4 rounded-2xl border-[1.75px] border-[#2D160E] bg-[#FAF8F5] flex flex-col items-center justify-start">
-                    {/* Compact 1:1 Square Box inside (a bit smaller) */}
-                    <div className="relative w-[112px] sm:w-[120px] aspect-square">
-                      <div 
-                        className="absolute inset-0 rounded-xl bg-[#2D160E] translate-x-[1.5px] translate-y-[1.5px] pointer-events-none"
-                        aria-hidden="true"
-                      />
-                      <div className="relative z-10 w-full h-full rounded-xl border-[1.5px] border-[#2D160E] bg-white p-2 flex flex-col items-center justify-center text-center space-y-1 transition-all">
-                        <div className="space-y-0.5 px-0.5">
-                          <h4 className="text-[10px] font-black text-[#2D160E] leading-tight line-clamp-2">
-                            {songData?.title?.trim() ? songData.title : 'Judul Lagu Pilihan'}
-                          </h4>
-                          <p className="text-[9px] font-bold text-[#6B5347] truncate max-w-[98px]">
-                            {songData?.artist?.trim() ? songData.artist : 'Nama Artis / Band'}
-                          </p>
+                  <div className="relative z-10 w-full h-full p-4 rounded-2xl border-[1.75px] border-[#2D160E] bg-[#FAF8F5] flex flex-col items-center justify-between">
+                    {/* Compact 1:1 Album Artwork / Video Thumbnail Box */}
+                    <div className="relative w-[130px] sm:w-[138px] aspect-square rounded-xl overflow-hidden border-[1.5px] border-[#2D160E] bg-white shadow-[1.5px_1.5px_0_#2D160E] flex items-center justify-center">
+                      {songData?.thumbnailUrl ? (
+                        <img 
+                          src={songData.thumbnailUrl} 
+                          alt={songData?.title || 'Song thumbnail'} 
+                          className="w-full h-full object-cover"
+                          crossOrigin="anonymous"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-[#800020]/10 flex flex-col items-center justify-center p-2 text-center">
+                          <Music size={28} className="text-[#800020] mb-1" />
+                          <span className="text-[9px] font-bold text-[#800020]">Songfess Track</span>
                         </div>
-                        <div className="pt-0.5">
-                          <span className="inline-block px-1.5 py-0.5 rounded bg-[#FAF8F5] border border-[#2D160E]/20 text-[8.5px] font-mono font-bold text-[#2D160E]">
-                            ⏱️ <span className="text-[#800020]">{songData?.formattedTimeRange || (songData?.favoriteTimestamp ? songData.favoriteTimestamp : '00:00 - 00:15')}</span>{' '}
-                            <span className="text-[#6B5347] font-medium">({songData?.duration ? `${songData.duration}s` : '15s'})</span>
-                          </span>
-                        </div>
+                      )}
+                      {/* Audio indicator badge */}
+                      <div className="absolute bottom-1.5 left-1.5 bg-[#2D160E]/85 backdrop-blur-xs text-white px-1.5 py-0.5 rounded text-[8px] font-mono flex items-center gap-1">
+                        <span className="inline-block w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                        <span>AUDIO</span>
                       </div>
+                    </div>
+
+                    {/* Song Title & Artist */}
+                    <div className="text-center w-full px-1 space-y-0.5">
+                      <h4 className="text-xs sm:text-[13px] font-black text-[#2D160E] leading-tight line-clamp-1">
+                        {songData?.title?.trim() ? songData.title : 'Judul Lagu Pilihan'}
+                      </h4>
+                      <p className="text-[10px] sm:text-[11px] font-bold text-[#6B5347] truncate max-w-[210px] mx-auto">
+                        {songData?.artist?.trim() ? songData.artist : 'Nama Artis / Band'}
+                      </p>
+                    </div>
+
+                    {/* Timestamp & IG Sticker Guideline */}
+                    <div className="flex flex-col items-center gap-1 w-full pt-0.5">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white border border-[#2D160E]/30 text-[9px] font-mono font-bold text-[#2D160E] shadow-[1px_1px_0_#2D160E]/20">
+                        ⏱️ <span className="text-[#800020]">{songData?.formattedTimeRange || (songData?.favoriteTimestamp ? songData.favoriteTimestamp : '00:00 - 00:15')}</span>{' '}
+                        <span className="text-[#6B5347] font-medium">({songData?.duration ? `${songData.duration}s` : '15s'})</span>
+                      </span>
+                      <span className="text-[8.5px] font-semibold text-[#9A8077] italic tracking-tight">
+                        🎵 Area penempelan sticker musik IG Story
+                      </span>
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Footer Section */}
             <div className="pt-2 border-t border-[#2D160E]/15 flex items-end justify-between">
