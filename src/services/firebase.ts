@@ -291,15 +291,28 @@ export const submissionService = {
           setDoc(sessionRef, { sessionNumber: 1 }, { merge: true }).catch(() => {});
         }
 
-        // Count live submissions in Firestore
-        const subsSnap = await getDocs(collection(db, 'submissions'));
-        actualUsed = subsSnap.size;
+        // Count ONLY songfess submissions for Songfess session quota (menfess does NOT consume songfess quota)
+        try {
+          const songfessQuery = query(
+            collection(db, 'submissions'),
+            where('type', '==', 'songfess')
+          );
+          const subsSnap = await getDocs(songfessQuery);
+          actualUsed = subsSnap.size;
+        } catch (queryErr) {
+          console.warn('Firestore songfess query error, falling back to client filter:', queryErr);
+          const allSubs = await getDocs(collection(db, 'submissions'));
+          actualUsed = allSubs.docs.filter(d => {
+            const data = d.data();
+            return data.type === 'songfess' || Boolean(data.songData);
+          }).length;
+        }
       } catch (err) {
         console.warn('Firestore session status error:', err);
-        actualUsed = getStoredSubmissions().length;
+        actualUsed = getStoredSubmissions().filter(s => s.type === 'songfess' || Boolean(s.songData)).length;
       }
     } else {
-      actualUsed = getStoredSubmissions().length;
+      actualUsed = getStoredSubmissions().filter(s => s.type === 'songfess' || Boolean(s.songData)).length;
     }
 
     const quotaTotal = Number(base.quotaTotal) || 50;

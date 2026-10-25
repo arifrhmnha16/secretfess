@@ -85,7 +85,7 @@ export function App() {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }} 
             openSubmitType={handleOpenSubmit}
-            isSongfessOpen={sessionStatus?.isOpen ?? true}
+            isSongfessOpen={sessionStatus ? (sessionStatus.isOpen && sessionStatus.quotaRemaining > 0) : true}
           />
         )}
 
@@ -112,6 +112,7 @@ export function App() {
               initialType={submitInitialType} 
               onNavigateStatus={handleNavigateStatus}
               sessionStatus={sessionStatus}
+              onSessionUpdated={refreshSession}
             />
           )}
 

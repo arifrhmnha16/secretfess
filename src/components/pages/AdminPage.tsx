@@ -380,7 +380,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
               </h3>
             </div>
             <p className="text-xs text-[#6B5347] font-medium">
-              Kuota Terisi: <strong className="font-mono text-[#2D160E]">{sessionData.quotaUsed} / {sessionData.quotaTotal}</strong> kiriman • 
+              Kuota Terisi: <strong className="font-mono text-[#2D160E]">{sessionData.quotaUsed} / {sessionData.quotaTotal}</strong> kiriman Songfess • 
               Sisa Slot: <strong className="font-mono text-[#2D160E]">{sessionData.quotaRemaining}</strong> • 
               Jam: <span className="font-semibold">{sessionData.operatingHours}</span>
             </p>

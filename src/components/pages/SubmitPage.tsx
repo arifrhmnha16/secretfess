@@ -62,6 +62,7 @@ interface SubmitPageProps {
   initialType?: SubmissionType;
   onNavigateStatus: (code?: string) => void;
   sessionStatus?: LiveSessionStatus | null;
+  onSessionUpdated?: () => void;
 }
 
 const RATE_LIMIT_KEY = 'himasefess_last_submit_time';
@@ -70,7 +71,8 @@ const RATE_LIMIT_COOLDOWN_MS = 10 * 60 * 1000; // 10 minutes
 export const SubmitPage: React.FC<SubmitPageProps> = ({ 
   initialType = 'menfess', 
   onNavigateStatus,
-  sessionStatus: propSessionStatus
+  sessionStatus: propSessionStatus,
+  onSessionUpdated
 }) => {
   const [submissionType, setSubmissionType] = useState<SubmissionType>(initialType);
   const [recipient, setRecipient] = useState('');
@@ -103,7 +105,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
 
   const [sessionStatus, setSessionStatus] = useState<LiveSessionStatus | null>(null);
   const liveSession = propSessionStatus || sessionStatus;
-  const isSongfessOpen = liveSession ? liveSession.isOpen : true;
+  const isSongfessOpen = liveSession ? (liveSession.isOpen && liveSession.quotaRemaining > 0) : true;
 
   // Rules acceptance & modal state
   const [rulesAccepted, setRulesAccepted] = useState(false);
@@ -503,6 +505,12 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
         songData,
         cardImageUrl
       });
+
+      // If songfess was submitted, immediately refresh session quota count
+      if (submissionType === 'songfess') {
+        submissionService.getSessionStatus().then(setSessionStatus).catch(() => {});
+        onSessionUpdated?.();
+      }
 
       let telegramDispatched = false;
       try {
