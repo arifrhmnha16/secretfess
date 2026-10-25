@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Download, Heart, Loader2, Music } from 'lucide-react';
+import { Download, Heart, Loader2 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import type { CardTheme, SongData, SubmissionCategory } from '../../types';
 import { 
@@ -274,46 +274,29 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
                 </p>
               </div>
             ) : (
-              /* Single Songfess Placeholder Box: only one clean box for the song with zero outer clutter */
+              /* Single Songfess Box: clean placeholder containing only song title, artist, and seconds/timestamp (no cover/artwork) */
               <div className="my-auto py-2 flex items-center justify-center w-full">
-                <div className="relative w-[210px] sm:w-[220px]">
+                <div className="relative w-full max-w-[250px] sm:max-w-[260px]">
                   {/* Exact rounded solid shadow underlay */}
                   <div 
                     className="absolute inset-0 rounded-2xl bg-[#2D160E] translate-x-[2.5px] translate-y-[2.5px] pointer-events-none"
                     aria-hidden="true"
                   />
                   {/* The Single Song Box */}
-                  <div className="relative z-10 w-full rounded-2xl border-[1.75px] border-[#2D160E] bg-white p-3.5 flex flex-col items-center justify-center text-center space-y-2">
-                    {/* 1:1 Album Artwork / Video Thumbnail */}
-                    <div className="w-[125px] sm:w-[135px] aspect-square rounded-xl overflow-hidden border-[1.5px] border-[#2D160E] bg-[#FAF8F5] flex items-center justify-center shadow-[1px_1px_0_#2D160E]">
-                      {songData?.thumbnailUrl ? (
-                        <img 
-                          src={songData.thumbnailUrl} 
-                          alt={songData?.title || 'Song artwork'} 
-                          className="w-full h-full object-cover"
-                          crossOrigin="anonymous"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-[#800020]/10 flex flex-col items-center justify-center p-2 text-center">
-                          <Music size={26} className="text-[#800020] mb-1" />
-                          <span className="text-[9px] font-bold text-[#800020]">Songfess Track</span>
-                        </div>
-                      )}
-                    </div>
-
+                  <div className="relative z-10 w-full rounded-2xl border-[1.75px] border-[#2D160E] bg-white py-6 px-4 flex flex-col items-center justify-center text-center space-y-3">
                     {/* Song Title & Artist */}
-                    <div className="space-y-0.5 px-1 w-full">
-                      <h4 className="text-xs sm:text-[13px] font-black text-[#2D160E] leading-tight line-clamp-1">
+                    <div className="space-y-1 px-1 w-full">
+                      <h4 className="text-sm sm:text-base font-black text-[#2D160E] leading-snug line-clamp-2">
                         {songData?.title?.trim() ? songData.title : 'Judul Lagu Pilihan'}
                       </h4>
-                      <p className="text-[10px] sm:text-[11px] font-bold text-[#6B5347] truncate max-w-[190px] mx-auto">
+                      <p className="text-xs font-bold text-[#6B5347] truncate max-w-[200px] mx-auto">
                         {songData?.artist?.trim() ? songData.artist : 'Nama Artis / Band'}
                       </p>
                     </div>
 
-                    {/* Timestamp Pill */}
+                    {/* Timestamp Pill (Detik) */}
                     <div className="pt-0.5">
-                      <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#FAF8F5] border border-[#2D160E]/20 text-[9px] font-mono font-bold text-[#2D160E]">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#FAF8F5] border border-[#2D160E]/20 text-[10px] sm:text-[11px] font-mono font-bold text-[#2D160E] shadow-[1px_1px_0_#2D160E]">
                         ⏱️ <span className="text-[#800020]">{songData?.formattedTimeRange || (songData?.favoriteTimestamp ? songData.favoriteTimestamp : '00:00 - 00:15')}</span>{' '}
                         <span className="text-[#6B5347] font-medium">({songData?.duration ? `${songData.duration}s` : '15s'})</span>
                       </span>

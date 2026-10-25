@@ -358,12 +358,12 @@ export const cloudinaryService = {
       ctx.textAlign = 'left';
       ctx.fillText(`Didedikasikan untuk: ${submission.recipient.slice(0, 20)}`, cardX + 85, cardY + 166);
 
-      // Single Song Box (clean placeholder with zero outer frames)
+      // Single Song Box (clean placeholder with zero outer frames and no cover)
       const centerX = cardX + cardW / 2;
-      const boxW = 540;
-      const boxH = 460;
+      const boxW = 600;
+      const boxH = 360;
       const boxX = centerX - boxW / 2;
-      const boxY = cardY + 350;
+      const boxY = cardY + 440;
 
       // Solid Shadow & Single Box Body
       ctx.fillStyle = '#2D160E';
@@ -381,31 +381,31 @@ export const cloudinaryService = {
 
       // Song Title
       ctx.fillStyle = '#2D160E';
-      ctx.font = 'bold 32px "Plus Jakarta Sans", sans-serif';
+      ctx.font = 'bold 36px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
       const songTitle = submission.songData?.title || 'Judul Lagu Pilihan';
-      ctx.fillText(songTitle.length > 22 ? songTitle.slice(0, 22) + '...' : songTitle, centerX, boxY + 150);
+      ctx.fillText(songTitle.length > 22 ? songTitle.slice(0, 22) + '...' : songTitle, centerX, boxY + 130);
 
       // Artist
       ctx.fillStyle = '#6B5248';
-      ctx.font = 'bold 24px "Plus Jakarta Sans", sans-serif';
+      ctx.font = 'bold 26px "Plus Jakarta Sans", sans-serif';
       const songArtist = submission.songData?.artist || 'Nama Artis / Band';
-      ctx.fillText(songArtist.length > 26 ? songArtist.slice(0, 26) + '...' : songArtist, centerX, boxY + 210);
+      ctx.fillText(songArtist.length > 26 ? songArtist.slice(0, 26) + '...' : songArtist, centerX, boxY + 195);
 
-      // Timestamp Pill inside single box
+      // Timestamp Pill inside single box (Detik)
       const timeLabel = submission.songData?.formattedTimeRange || submission.songData?.favoriteTimestamp || '00:00 - 00:15';
-      const timeBoxW = 320;
+      const timeBoxW = 360;
       ctx.fillStyle = '#FAF8F5';
       ctx.beginPath();
-      ctx.roundRect(centerX - timeBoxW / 2, boxY + 300, timeBoxW, 54, 27);
+      ctx.roundRect(centerX - timeBoxW / 2, boxY + 255, timeBoxW, 58, 29);
       ctx.fill();
       ctx.strokeStyle = 'rgba(45, 22, 14, 0.3)';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5;
       ctx.stroke();
 
       ctx.fillStyle = '#2D160E';
-      ctx.font = 'bold 20px monospace';
-      ctx.fillText(`⏱️ ${timeLabel} (${submission.songData?.duration || 15}s)`, centerX, boxY + 335);
+      ctx.font = 'bold 22px monospace';
+      ctx.fillText(`⏱️ ${timeLabel} (${submission.songData?.duration || 15}s)`, centerX, boxY + 293);
 
       // Sender Info
       ctx.fillStyle = '#6B5248';
