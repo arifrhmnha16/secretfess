@@ -74,7 +74,7 @@ export const telegramService = {
   getInlineKeyboard(trackingCode: string) {
     const adminUrl = typeof window !== 'undefined' && window.location?.origin 
       ? `${window.location.origin}/?admin=himase2026` 
-      : 'https://secretfess.vercel.app/?admin=himase2026';
+      : 'https://secretfess.my.id/?admin=himase2026';
 
     return {
       inline_keyboard: [

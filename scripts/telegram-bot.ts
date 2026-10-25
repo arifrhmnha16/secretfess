@@ -248,7 +248,7 @@ function buildPanelContent(stats: Awaited<ReturnType<typeof getStats>>) {
         { text: '🔢 Kuota 100', callback_data: 'ctrl:set_quota:100' }
       ],
       [
-        { text: '🌐 Buka Web Admin Panel', url: 'https://secretfess.vercel.app/?admin=himase2026' }
+        { text: '🌐 Buka Web Admin Panel', url: 'https://secretfess.my.id/?admin=himase2026' }
       ]
     ]
   };
@@ -522,7 +522,7 @@ Berikut daftar perintah yang dapat kamu gunakan:
         await sendMessage(chatId, `❌ Kiriman dengan kode <code>#${arg1}</code> tidak ditemukan.`);
         return;
       }
-      const generateUrl = `https://secretfess.vercel.app/?admin=himase2026&preview=${item.trackingCode}`;
+      const generateUrl = `https://secretfess.my.id/?admin=himase2026&preview=${item.trackingCode}`;
       await sendMessage(
         chatId, 
         `🖼️ <b>GENERATE DESAIN KARTU #${item.trackingCode}</b>\n` +
@@ -637,7 +637,7 @@ async function handleCallbackQuery(cb: {
           reply_parameters: { message_id: messageId }
         });
       } else {
-        const previewUrl = `https://secretfess.vercel.app/?admin=himase2026&preview=${item.trackingCode}`;
+        const previewUrl = `https://secretfess.my.id/?admin=himase2026&preview=${item.trackingCode}`;
         await sendMessage(chatId, `⚠️ Gambar belum tersedia di cloud. Silakan buka web admin: ${previewUrl}`, null, messageId);
       }
       return;

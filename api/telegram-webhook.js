@@ -324,7 +324,7 @@ function buildPanelContent(stats) {
         { text: '🔢 Kuota 100', callback_data: 'ctrl:set_quota:100' }
       ],
       [
-        { text: '🌐 Buka Dashboard Web Admin', url: 'https://secretfess.vercel.app/?admin=himase2026' }
+        { text: '🌐 Buka Dashboard Web Admin', url: 'https://secretfess.my.id/?admin=himase2026' }
       ]
     ]
   };
@@ -437,7 +437,7 @@ export default async function handler(req, res) {
 
         // Fallback jika gambar cloud belum tersedia
         if (progressMsg?.result?.message_id) await deleteMessage(chatId, progressMsg.result.message_id);
-        const previewUrl = `https://secretfess.vercel.app/?admin=himase2026&preview=${item.trackingCode}`;
+        const previewUrl = `https://secretfess.my.id/?admin=himase2026&preview=${item.trackingCode}`;
         await sendMessage(
           chatId,
           `${caption}\n\n⚠️ <i>Gambar kartu belum sempat di-render otomatis ke cloud. Klik tombol di bawah untuk membuka kartu dan unduh PNG HD:</i>`,
@@ -710,7 +710,7 @@ Berikut daftar perintah yang dapat kamu gunakan:
           if (progressMsg?.result?.message_id) await deleteMessage(chatId, progressMsg.result.message_id);
         } else {
           if (progressMsg?.result?.message_id) await deleteMessage(chatId, progressMsg.result.message_id);
-          const previewUrl = `https://secretfess.vercel.app/?admin=himase2026&preview=${item.trackingCode}`;
+          const previewUrl = `https://secretfess.my.id/?admin=himase2026&preview=${item.trackingCode}`;
           await sendMessage(
             chatId,
             `🖼️ <b>Generate Desain #${item.trackingCode}</b>\nBuka link untuk unduh kartu HD: ${previewUrl}`,
