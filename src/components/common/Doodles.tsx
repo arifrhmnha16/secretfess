@@ -22,7 +22,7 @@ export const PeaceDoodle: React.FC<DoodleProps> = ({ className = '', color = '#2
 export const PencilDoodle: React.FC<DoodleProps> = ({ className = '', color = '#2D160E', size = 34 }) => (
   <svg width={size} height={size} viewBox="0 0 50 50" fill="none" className={className} xmlns="http://www.w3.org/2000/svg">
     <g transform="rotate(35 25 25)">
-      <rect x="20" y="10" width="10" height="24" rx="2" fill="#FFAEC8" stroke={color} strokeWidth="1.75" />
+      <rect x="20" y="10" width="10" height="24" rx="2" fill="#800020" stroke={color} strokeWidth="1.75" />
       <line x1="25" y1="10" x2="25" y2="34" stroke={color} strokeWidth="1.5" strokeDasharray="3 2" />
       <path d="M20 34 L25 43 L30 34 Z" fill="#FAF8F5" stroke={color} strokeWidth="1.75" strokeLinejoin="round" />
       <polygon points="23,39 25,43 27,39" fill={color} />
@@ -35,7 +35,7 @@ export const SparkleDoodle: React.FC<DoodleProps> = ({ className = '', color = '
   <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} xmlns="http://www.w3.org/2000/svg">
     <path 
       d="M16 2 C16 9.5 22.5 16 30 16 C22.5 16 16 22.5 16 30 C16 22.5 9.5 16 2 16 C9.5 16 16 9.5 16 2Z" 
-      fill="#FFAEC8" 
+      fill="#800020" 
       stroke={color} 
       strokeWidth="1.75" 
       strokeLinejoin="round" 
@@ -47,7 +47,7 @@ export const SparkleCluster: React.FC<DoodleProps> = ({ className = '', color = 
   <svg width={size} height={size} viewBox="0 0 50 50" fill="none" className={className} xmlns="http://www.w3.org/2000/svg">
     <path 
       d="M20 6 C20 13 25 18 32 18 C25 18 20 23 20 30 C20 23 15 18 8 18 C15 18 20 13 20 6Z" 
-      fill="#FFAEC8" 
+      fill="#800020" 
       stroke={color} 
       strokeWidth="1.75" 
       strokeLinejoin="round" 
@@ -80,7 +80,7 @@ export const CursorPointerDoodle: React.FC<DoodleProps> = ({ className = '', col
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className} xmlns="http://www.w3.org/2000/svg">
     <path 
       d="M14 6 L14 28 L20 22 L26 34 L30 32 L24 20 L31 19 Z" 
-      fill="#FFAEC8" 
+      fill="#800020" 
       stroke={color} 
       strokeWidth="1.75" 
       strokeLinejoin="round" 
@@ -92,14 +92,14 @@ export const EnvelopeDoodle: React.FC<DoodleProps> = ({ className = '', color = 
   <svg width={size} height={size} viewBox="0 0 60 60" fill="none" className={className} xmlns="http://www.w3.org/2000/svg">
     <rect x="8" y="14" width="44" height="34" rx="8" fill="#FFFDFB" stroke={color} strokeWidth="1.75" />
     <path d="M10 18 L30 34 L50 18" stroke={color} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-    <circle cx="30" cy="34" r="6" fill="#FFAEC8" stroke={color} strokeWidth="1.5" />
+    <circle cx="30" cy="34" r="6" fill="#800020" stroke={color} strokeWidth="1.5" />
   </svg>
 );
 
 export const CassetteDoodle: React.FC<DoodleProps> = ({ className = '', color = '#2D160E', size = 42 }) => (
   <svg width={size} height={size} viewBox="0 0 70 50" fill="none" className={className} xmlns="http://www.w3.org/2000/svg">
     <rect x="5" y="6" width="60" height="38" rx="6" fill="#FFFDFB" stroke={color} strokeWidth="1.75" />
-    <rect x="12" y="12" width="46" height="20" rx="3" fill="#FFAEC8" stroke={color} strokeWidth="1.5" />
+    <rect x="12" y="12" width="46" height="20" rx="3" fill="#800020" stroke={color} strokeWidth="1.5" />
     <rect x="20" y="16" width="30" height="12" rx="2" fill="#FAF8F5" stroke={color} strokeWidth="1.5" />
     <circle cx="26" cy="22" r="3" fill="none" stroke={color} strokeWidth="1.5" />
     <circle cx="44" cy="22" r="3" fill="none" stroke={color} strokeWidth="1.5" />
@@ -113,7 +113,7 @@ export const VinylDoodle: React.FC<DoodleProps> = ({ className = '', color = '#2
     <circle cx="25" cy="25" r="22" fill="#2D160E" stroke={color} strokeWidth="1.5" />
     <circle cx="25" cy="25" r="16" fill="none" stroke="#FAF8F5" strokeWidth="0.8" strokeDasharray="4 2" opacity="0.3" />
     <circle cx="25" cy="25" r="11" fill="none" stroke="#FAF8F5" strokeWidth="0.8" strokeDasharray="3 2" opacity="0.3" />
-    <circle cx="25" cy="25" r="7" fill="#FFAEC8" stroke={color} strokeWidth="1.2" />
+    <circle cx="25" cy="25" r="7" fill="#800020" stroke={color} strokeWidth="1.2" />
     <circle cx="25" cy="25" r="2" fill="#2D160E" />
   </svg>
 );

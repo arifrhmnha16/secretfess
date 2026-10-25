@@ -58,12 +58,13 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
           accentBg: '#EADCF8',
           accentText: '#503170'
         };
+      case 'maroon_cream':
       case 'pink_cream':
       default:
         return {
           cardBg: '#FFFFFF',
-          accentBg: '#FFAEC8',
-          accentText: '#2D160E'
+          accentBg: '#800020',
+          accentText: '#FFFFFF'
         };
     }
   };
@@ -82,7 +83,7 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
         pixelRatio: 3,
         quality: 1,
         cacheBust: true,
-        imagePlaceholder: 'data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60"%3E%3Ccircle cx="30" cy="30" r="30" fill="%23FFAEC8"/%3E%3C/svg%3E',
+        imagePlaceholder: 'data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60"%3E%3Ccircle cx="30" cy="30" r="30" fill="%23800020"/%3E%3C/svg%3E',
         style: {
           transform: 'none'
         }
@@ -137,12 +138,12 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
           </span>
           <button
             type="button"
-            onClick={() => onThemeChange('pink_cream')}
+            onClick={() => onThemeChange('maroon_cream')}
             className={`px-2.5 py-0.5 text-xs font-bold rounded-full border border-[#2D160E] transition-all ${
-              theme === 'pink_cream' ? 'bg-[#FFAEC8] shadow-[1.5px_1.5px_0_#2D160E]' : 'bg-white opacity-70'
+              theme === 'maroon_cream' || theme === 'pink_cream' ? 'bg-[#800020] text-white shadow-[1.5px_1.5px_0_#2D160E]' : 'bg-white opacity-70'
             }`}
           >
-            Pink Cream
+            Maroon Cream
           </button>
           <button
             type="button"
@@ -205,7 +206,7 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-black tracking-wider text-[#2D160E] uppercase flex items-center gap-1">
                 <span>Se.Cretfess</span>
-                <span className="w-1 h-1 rounded-full bg-[#E85B88]"></span>
+                <span className="w-1 h-1 rounded-full bg-[#800020]"></span>
                 <span className="text-[#6B5347]">HIMASE</span>
               </span>
 
@@ -218,7 +219,7 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
             <div className="inline-flex items-center">
               <div 
                 className="pill-badge text-xs"
-                style={{ backgroundColor: currentTheme.accentBg }}
+                style={{ backgroundColor: currentTheme.accentBg, color: currentTheme.accentText }}
               >
                 <span className="font-medium opacity-80">
                   {type === 'songfess' ? 'Didedikasikan untuk:' : 'Untuk:'}
@@ -257,7 +258,7 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
                   </div>
                   <div className="pt-0.5">
                     <span className="inline-block px-1.5 py-0.5 rounded bg-[#FAF8F5] border border-[#2D160E]/20 text-[8.5px] font-mono font-bold text-[#2D160E]">
-                      ⏱️ <span className="text-[#E85B88]">{songData?.formattedTimeRange || (songData?.favoriteTimestamp ? songData.favoriteTimestamp : '00:00 - 00:15')}</span>{' '}
+                      ⏱️ <span className="text-[#800020]">{songData?.formattedTimeRange || (songData?.favoriteTimestamp ? songData.favoriteTimestamp : '00:00 - 00:15')}</span>{' '}
                       <span className="text-[#6B5347] font-medium">({songData?.duration ? `${songData.duration}s` : '15s'})</span>
                     </span>
                   </div>
@@ -281,7 +282,7 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
 
             <div className="text-right flex flex-col items-end">
               <div className="flex items-center gap-1 text-[#2D160E]">
-                <Heart size={12} className="text-[#E85B88] fill-[#FFAEC8]" />
+                <Heart size={12} className="text-[#800020] fill-[#800020]" />
                 <span className="text-[10px] font-bold font-mono">@se.cretfess</span>
               </div>
             </div>
@@ -303,7 +304,7 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
           className="btn btn-white btn-sm flex items-center gap-1.5 text-xs font-bold shadow-[2px_2px_0_#2D160E]"
         >
           {isExporting ? (
-            <Loader2 size={13} className="animate-spin text-[#E85B88]" />
+            <Loader2 size={13} className="animate-spin text-[#800020]" />
           ) : (
             <Download size={13} />
           )}

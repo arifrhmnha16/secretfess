@@ -74,7 +74,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between selection:bg-[#FFAEC8] selection:text-[#2D160E]">
+    <div className="min-h-screen flex flex-col justify-between selection:bg-[#800020] selection:text-white">
       <div>
         {/* Navigation Bar - Disembunyikan saat di dashboard admin */}
         {activeTab !== 'admin' && (

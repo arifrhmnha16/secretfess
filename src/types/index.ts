@@ -11,7 +11,7 @@ export type SubmissionCategory =
   | 'encouragement' 
   | 'friendship';
 
-export type CardTheme = 'pink_cream' | 'matcha' | 'caramel' | 'lavender';
+export type CardTheme = 'maroon_cream' | 'pink_cream' | 'matcha' | 'caramel' | 'lavender';
 
 export interface YouTubeSearchResult {
   id: string; // videoId

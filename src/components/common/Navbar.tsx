@@ -34,13 +34,13 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <div className="flex items-center gap-1.5">
             <span className="text-xl md:text-2xl font-black tracking-tight text-[#2D160E]">
-              Se<span className="text-[#E85B88]">.</span>Cretfess
+              Se<span className="text-[#800020]">.</span>Cretfess
             </span>
-            <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-[#FFAEC8] border border-[#2D160E] text-[10px] font-black text-[#2D160E] shadow-[1.5px_1.5px_0_#2D160E]">
+            <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-[#800020] border border-[#2D160E] text-[10px] font-black text-white shadow-[1.5px_1.5px_0_#2D160E]">
               HIMASE
             </span>
           </div>
-          <SparkleDoodle size={16} color="#E85B88" className="opacity-90" />
+          <SparkleDoodle size={16} color="#800020" className="opacity-90" />
         </div>
 
         {/* Desktop Nav Items */}
@@ -50,7 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs lg:text-sm font-bold transition-all ${
               activeTab === 'landing'
                 ? 'bg-[#2D160E] text-[#FAF8F5] shadow-[2px_2px_0_#2D160E]'
-                : 'text-[#2D160E] hover:bg-[#FFAEC8]/20'
+                : 'text-[#2D160E] hover:bg-[#800020]/15'
             }`}
           >
             Beranda
@@ -61,7 +61,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs lg:text-sm font-bold flex items-center gap-1.5 transition-all ${
               activeTab === 'how-it-works'
                 ? 'bg-[#2D160E] text-[#FAF8F5] shadow-[2px_2px_0_#2D160E]'
-                : 'text-[#2D160E] hover:bg-[#FFAEC8]/20'
+                : 'text-[#2D160E] hover:bg-[#800020]/15'
             }`}
           >
             <BookOpen size={14} />
@@ -73,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs lg:text-sm font-bold flex items-center gap-1.5 transition-all ${
               activeTab === 'status'
                 ? 'bg-[#2D160E] text-[#FAF8F5] shadow-[2px_2px_0_#2D160E]'
-                : 'text-[#2D160E] hover:bg-[#FFAEC8]/20'
+                : 'text-[#2D160E] hover:bg-[#800020]/15'
             }`}
           >
             <Search size={14} />
@@ -100,7 +100,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               if (openSubmitType) openSubmitType('menfess');
               handleNavClick('submit');
             }}
-            className="btn btn-pink btn-sm flex items-center gap-1.5"
+            className="btn btn-maroon btn-sm flex items-center gap-1.5"
           >
             <Send size={13} />
             <span>Kirim Pesan</span>
@@ -174,7 +174,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 if (openSubmitType) openSubmitType('menfess');
                 handleNavClick('submit');
               }}
-              className="w-full btn btn-pink justify-center text-sm py-2.5"
+              className="w-full btn btn-maroon justify-center text-sm py-2.5"
             >
               <Send size={15} />
               <span>Tulis Pesan Sekarang</span>

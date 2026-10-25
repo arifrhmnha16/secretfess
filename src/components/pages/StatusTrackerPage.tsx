@@ -91,12 +91,12 @@ export const StatusTrackerPage: React.FC<StatusTrackerPageProps> = ({
       
       {/* 1. Header & Search Bar */}
       <div className="max-w-2xl mx-auto text-center space-y-3">
-        <div className="pill-badge pill-pink text-xs">
+        <div className="pill-badge pill-maroon text-xs">
           Pelacak Status Tiket
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-[#2D160E] tracking-tight">
           Lacak Perjalanan{' '}
-          <span className="highlight-pink-box">
+          <span className="highlight-maroon-box">
             Pesanmu
           </span>
         </h1>
@@ -138,7 +138,7 @@ export const StatusTrackerPage: React.FC<StatusTrackerPageProps> = ({
           {/* Status Summary Banner */}
           <div className="editorial-card p-5 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
-              <span className="text-[11px] font-mono font-bold text-[#E85B88] uppercase tracking-wider">
+              <span className="text-[11px] font-mono font-bold text-[#800020] uppercase tracking-wider">
                 Kode Pelacakan Resmi
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-[#2D160E] font-mono">
@@ -167,7 +167,7 @@ export const StatusTrackerPage: React.FC<StatusTrackerPageProps> = ({
                 ].map((step, idx) => (
                   <div key={idx} className="space-y-1.5">
                     <div className={`h-2 rounded-full border border-[#2D160E] ${
-                      step.active ? 'bg-[#FFAEC8]' : 'bg-gray-200'
+                      step.active ? 'bg-[#800020]' : 'bg-gray-200'
                     }`} />
                     <p className={`text-[10px] sm:text-xs font-bold ${
                       step.active ? 'text-[#2D160E]' : 'text-gray-400'
@@ -208,7 +208,7 @@ export const StatusTrackerPage: React.FC<StatusTrackerPageProps> = ({
                     href={currentResult.instagramPostUrl || "https://instagram.com/se.cretfess"}
                     target="_blank" 
                     rel="noreferrer"
-                    className="btn btn-pink btn-sm flex items-center gap-1.5 text-xs font-bold"
+                    className="btn btn-maroon btn-sm flex items-center gap-1.5 text-xs font-bold"
                   >
                     <InstagramIcon size={13} />
                     <span>Lihat di Instagram Story @se.cretfess</span>

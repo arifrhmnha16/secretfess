@@ -18,13 +18,13 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({ onNavigateSubmit
       
       {/* Header Banner */}
       <div className="max-w-3xl mx-auto text-center space-y-3">
-        <div className="pill-badge pill-pink text-xs inline-flex items-center gap-1.5">
+        <div className="pill-badge pill-maroon text-xs inline-flex items-center gap-1.5">
           <Sparkles size={12} />
           <span>Panduan Pengiriman Publik</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-[#2D160E] tracking-tight">
           Cara Mengirim{' '}
-          <span className="highlight-pink-box">
+          <span className="highlight-maroon-box">
             Menfess & Songfess
           </span>
         </h1>
@@ -39,18 +39,18 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({ onNavigateSubmit
         {/* Step 1 */}
         <div className="editorial-card p-6 flex flex-col justify-between bg-white space-y-4">
           <div className="space-y-3">
-            <div className="w-8 h-8 rounded-lg bg-[#FFAEC8] border border-[#2D160E] flex items-center justify-center font-black text-sm text-[#2D160E] shadow-[1.5px_1.5px_0_#2D160E]">
+            <div className="w-8 h-8 rounded-lg bg-[#800020] border border-[#2D160E] flex items-center justify-center font-black text-sm text-white shadow-[1.5px_1.5px_0_#2D160E]">
               1
             </div>
             <h3 className="text-lg font-black text-[#2D160E] flex items-center gap-2">
-              <Mail size={16} className="text-[#E85B88]" />
+              <Mail size={16} className="text-[#800020]" />
               <span>Pilih Mode Pesan</span>
             </h3>
             <p className="text-xs text-[#6B5347] leading-relaxed">
               Tentukan pilihanmu: <strong>Mode Menfess</strong> untuk pesan teks curhat/apresiasi, atau <strong>Mode Songfess</strong> untuk mendedikasikan lagu spesial beserta potongan lirik favoritmu.
             </p>
           </div>
-          <div className="pt-3 border-t border-[#2D160E]/15 text-[11px] font-mono font-bold text-[#E85B88]">
+          <div className="pt-3 border-t border-[#2D160E]/15 text-[11px] font-mono font-bold text-[#800020]">
             Langkah 1 • Formulir
           </div>
         </div>
@@ -128,7 +128,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({ onNavigateSubmit
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#2D160E]/20 space-y-2">
-            <div className="w-7 h-7 rounded-lg bg-[#FFAEC8] border border-[#2D160E] flex items-center justify-center font-black text-xs text-[#2D160E]">
+            <div className="w-7 h-7 rounded-lg bg-[#800020] border border-[#2D160E] flex items-center justify-center font-black text-xs text-white">
               1
             </div>
             <h4 className="text-sm font-black text-[#2D160E]">Gunakan Inisial atau Sapaan Santun</h4>

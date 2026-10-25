@@ -255,7 +255,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
     return (
       <div className="editorial-container py-16 max-w-md mx-auto">
         <div className="editorial-card p-6 sm:p-8 bg-white space-y-5">
-          <div className="w-12 h-12 rounded-2xl bg-[#FFAEC8] border border-[#2D160E] flex items-center justify-center mx-auto text-[#2D160E] shadow-[2px_2px_0_#2D160E]">
+          <div className="w-12 h-12 rounded-2xl bg-[#800020] border border-[#2D160E] flex items-center justify-center mx-auto text-white shadow-[2px_2px_0_#2D160E]">
             <Lock size={22} />
           </div>
 
@@ -281,7 +281,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
                 required
               />
               {passcodeError && (
-                <p className="text-xs text-[#E85B88] font-bold mt-1.5">{passcodeError}</p>
+                <p className="text-xs text-[#800020] font-bold mt-1.5">{passcodeError}</p>
               )}
             </div>
 
@@ -315,7 +315,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
             <h1 className="text-2xl font-black text-[#2D160E]">
               Dashboard Moderasi Pengurus
             </h1>
-            <span className="pill-badge pill-pink text-[10px] py-0.5 px-2">
+            <span className="pill-badge pill-maroon text-[10px] py-0.5 px-2">
               Admin Mode
             </span>
           </div>
@@ -521,16 +521,16 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
           filteredSubmissions.map((sub) => (
             <div 
               key={sub.id}
-              className="editorial-card p-5 bg-white space-y-4 transition-all hover:border-[#E85B88]"
+              className="editorial-card p-5 bg-white space-y-4 transition-all hover:border-[#800020]"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#2D160E]/10">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-mono font-black text-sm px-2 py-0.5 rounded bg-[#FFAEC8]/30 border border-[#2D160E]/20 text-[#2D160E]">
+                  <span className="font-mono font-black text-sm px-2 py-0.5 rounded bg-[#800020]/15 border border-[#800020]/30 text-[#800020]">
                     #{sub.trackingCode}
                   </span>
 
                   <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border ${
-                    sub.type === 'songfess' ? 'bg-purple-100 text-purple-900 border-purple-300' : 'bg-pink-100 text-pink-900 border-pink-300'
+                    sub.type === 'songfess' ? 'bg-purple-100 text-purple-900 border-purple-300' : 'bg-[#800020]/15 text-[#800020] border-[#800020]/30'
                   }`}>
                     {sub.type}
                   </span>
@@ -572,7 +572,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
               {sub.songData && (
                 <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#2D160E]/20 text-xs space-y-1">
                   <div className="flex items-center gap-2">
-                    <Music size={14} className="text-[#E85B88] shrink-0" />
+                    <Music size={14} className="text-[#800020] shrink-0" />
                     <span className="font-black text-[#2D160E]">{sub.songData.title}</span>
                     <span className="text-[#6B5347]">— {sub.songData.artist}</span>
                     {sub.songData.favoriteTimestamp && (
@@ -618,7 +618,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
                   href={sub.instagramPostUrl} 
                   target="_blank" 
                   rel="noreferrer"
-                  className="text-xs text-[#E85B88] font-bold hover:underline inline-flex items-center gap-1"
+                  className="text-xs text-[#800020] font-bold hover:underline inline-flex items-center gap-1"
                 >
                   <InstagramIcon size={12} />
                   <span>Lihat Tayangan di Instagram Story / Feed</span>
@@ -813,7 +813,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
               <button
                 type="button"
                 onClick={() => setPreviewItem(null)}
-                className="text-xs font-bold px-2 py-0.5 rounded border border-[#2D160E] hover:bg-[#FFAEC8]"
+                className="text-xs font-bold px-2 py-0.5 rounded border border-[#2D160E] hover:bg-[#800020] hover:text-white"
               >
                 Tutup
               </button>
@@ -843,7 +843,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
           <div className="editorial-card p-6 bg-white max-w-md w-full space-y-5 shadow-[6px_6px_0_#2D160E] relative border-2 border-[#2D160E]">
             <div className="flex items-center justify-between pb-3 border-b border-[#2D160E]/15">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#E85B88]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#800020]" />
                 <h3 className="text-sm font-black text-[#2D160E] uppercase tracking-wide">
                   Atur Sesi & Kuota Songfess
                 </h3>
@@ -851,7 +851,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
               <button
                 type="button"
                 onClick={() => setSessionConfigModalOpen(false)}
-                className="text-xs font-bold px-2 py-0.5 rounded border border-[#2D160E] hover:bg-[#FFAEC8]"
+                className="text-xs font-bold px-2 py-0.5 rounded border border-[#2D160E] hover:bg-[#800020] hover:text-white"
               >
                 ✕
               </button>
@@ -865,7 +865,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onBackToHome, onSessionUpd
                   <button
                     type="button"
                     onClick={() => setModalSessionNumber(prev => prev + 1)}
-                    className="text-[10px] text-[#E85B88] hover:underline font-bold"
+                    className="text-[10px] text-[#800020] hover:underline font-bold"
                   >
                     +1 Sesi Berikutnya
                   </button>

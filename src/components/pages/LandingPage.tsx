@@ -40,7 +40,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-[#2D160E] tracking-tight leading-[1.2]">
             Saatnya{' '}
             <span className="inline-flex items-center">
-              <span className="highlight-pink-box inline-block my-1">
+              <span className="highlight-maroon-box inline-block my-1">
                 Kirimkan
               </span>
               <PencilDoodle size={30} className="inline-block ml-1 opacity-80" />
@@ -69,7 +69,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
 
           <button
             onClick={() => onOpenSubmit('songfess')}
-            className="w-full sm:w-auto btn btn-pink btn-capsule text-sm sm:text-base py-3 px-7 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto btn btn-maroon btn-capsule text-sm sm:text-base py-3 px-7 flex items-center justify-center gap-2"
           >
             <Music size={16} />
             <span>Kirim Songfess Musik</span>
@@ -106,7 +106,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
           >
             <div className="space-y-4 mb-6">
               <div className="flex items-center justify-between">
-                <span className="pill-badge pill-pink text-xs inline-flex items-center gap-1.5">
+                <span className="pill-badge pill-maroon text-xs inline-flex items-center gap-1.5">
                   <Mail size={13} />
                   <span>Mode Menfess • Buka 24 Jam</span>
                 </span>
@@ -185,7 +185,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
             <div className="space-y-2 max-w-xl">
               <div className="flex items-center gap-2">
                 <span className="pill-badge pill-white text-xs">
-                  <Radio size={13} className="text-[#E85B88]" />
+                  <Radio size={13} className="text-[#800020]" />
                   Status Kuota Sesi
                 </span>
                 <span className="text-xs font-bold text-[#664E19]">
@@ -210,7 +210,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
               </div>
               <div className="w-full h-2.5 bg-[#FAF8F5] rounded-full border border-[#2D160E] overflow-hidden">
                 <div 
-                  className="h-full bg-[#FFAEC8] rounded-full transition-all duration-500"
+                  className="h-full bg-[#800020] rounded-full transition-all duration-500"
                   style={{ 
                     width: session ? `${Math.min(100, Math.round((session.quotaUsed / session.quotaTotal) * 100))}%` : '0%' 
                   }}
@@ -231,7 +231,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
       <section className="mb-16 md:mb-24 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="space-y-1">
-            <div className="pill-badge pill-pink text-xs inline-flex items-center gap-1.5">
+            <div className="pill-badge pill-maroon text-xs inline-flex items-center gap-1.5">
               <Sparkles size={12} />
               <span>Dapur Editorial</span>
             </div>
@@ -276,7 +276,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
               >
                 <div className="space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-mono font-bold bg-[#FFAEC8]/30 px-2 py-0.5 rounded-md border border-[#2D160E]/20 text-[#2D160E]">
+                    <span className="text-[11px] font-mono font-bold bg-[#800020]/15 px-2 py-0.5 rounded-md border border-[#800020]/30 text-[#800020]">
                       #{item.trackingCode}
                     </span>
                     <span className="text-xs font-bold text-[#10B981] flex items-center gap-1">
@@ -295,7 +295,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
 
                   {item.songData && (
                     <div className="p-2 rounded-lg bg-[#FAF8F5] border border-[#2D160E]/15 text-xs flex items-center gap-2">
-                      <Music size={13} className="text-[#E85B88] shrink-0" />
+                      <Music size={13} className="text-[#800020] shrink-0" />
                       <span className="font-extrabold text-[#2D160E] truncate">
                         {item.songData.title}
                       </span>
@@ -330,7 +330,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div className="p-5 rounded-xl bg-[#FAF8F5] border border-[#2D160E] space-y-2">
-              <div className="w-8 h-8 rounded-lg bg-[#FFAEC8] border border-[#2D160E] flex items-center justify-center font-black text-sm text-[#2D160E]">
+              <div className="w-8 h-8 rounded-lg bg-[#800020] border border-[#2D160E] flex items-center justify-center font-black text-sm text-white">
                 1
               </div>
               <h4 className="text-base font-black text-[#2D160E]">100% Identitas Terlindungi</h4>
@@ -366,18 +366,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
           6. BOTTOM CTA BANNER
       ======================================================== */}
       <section className="text-center pb-6">
-        <div className="editorial-card p-8 sm:p-10 bg-[#FFAEC8] max-w-2xl mx-auto space-y-4">
-          <SparkleCluster size={32} color="#2D160E" className="mx-auto" />
-          <h2 className="text-2xl sm:text-3xl font-black text-[#2D160E]">
+        <div className="editorial-card p-8 sm:p-10 bg-[#800020] max-w-2xl mx-auto space-y-4">
+          <SparkleCluster size={32} color="#FFFFFF" className="mx-auto" />
+          <h2 className="text-2xl sm:text-3xl font-black text-white">
             Jangan Biarkan Rasamu Mengendap Sendiri.
           </h2>
-          <p className="text-xs sm:text-sm text-[#2D160E] font-semibold max-w-md mx-auto">
+          <p className="text-xs sm:text-sm text-white/90 font-semibold max-w-md mx-auto">
             Katakan sekarang lewat Menfess anonim atau sematkan lagu favoritmu lewat Songfess.
           </p>
           <div className="pt-2">
             <button
               onClick={() => onOpenSubmit('menfess')}
-              className="btn btn-primary text-sm sm:text-base py-3 px-8 shadow-[3px_3px_0_#FFFFFF]"
+              className="btn btn-white text-sm sm:text-base py-3 px-8 shadow-[3px_3px_0_#2D160E]"
             >
               Mulai Tulis Pesan Sekarang
             </button>

@@ -77,7 +77,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [senderAlias, setSenderAlias] = useState('');
   const [message, setMessage] = useState('');
-  const theme: CardTheme = 'pink_cream';
+  const theme: CardTheme = 'maroon_cream';
 
   // YouTube Songfess States
   const [searchQuery, setSearchQuery] = useState('');
@@ -552,12 +552,12 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
         
         {/* Header */}
         <div className="text-center space-y-3">
-          <div className="pill-badge pill-pink text-xs">
+          <div className="pill-badge pill-maroon text-xs">
             Formulir Pengiriman
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#2D160E] tracking-tight">
             Ungkapkan{' '}
-            <span className="highlight-pink-box">
+            <span className="highlight-maroon-box">
               Perasaanmu
             </span>
           </h1>
@@ -588,7 +588,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
               onClick={() => setSubmissionType('songfess')}
               className={`btn btn-capsule text-xs sm:text-sm py-2 px-5 transition-all flex items-center gap-2 ${
                 submissionType === 'songfess'
-                  ? 'btn-pink'
+                  ? 'btn-maroon'
                   : 'btn-white'
               }`}
             >
@@ -656,7 +656,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
             {/* Target Recipient */}
             <div>
               <label className="input-label flex items-center justify-between">
-                <span>Untuk Siapa? (Target) <span className="text-[#E85B88]">*</span></span>
+                <span>Untuk Siapa? (Target) <span className="text-[#800020]">*</span></span>
                 <span className="text-[11px] font-normal text-[#6B5347]">Contoh: @clarissa atau Kak Lab SE</span>
               </label>
               <input
@@ -674,7 +674,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
             <div className="p-3.5 sm:p-4 rounded-xl bg-[#FAF8F5] border border-[#2D160E] space-y-3">
               <div>
                 <label className="input-label flex items-center justify-between">
-                  <span>Nama Pengirim / Alias {!isAnonymous && <span className="text-[#E85B88]">*</span>}</span>
+                  <span>Nama Pengirim / Alias {!isAnonymous && <span className="text-[#800020]">*</span>}</span>
                   <span className="text-[11px] font-normal text-[#6B5347]">
                     {isAnonymous ? 'Mode Anonim Aktif' : 'Contoh: Ahmad, Teman Sebangku, dll.'}
                   </span>
@@ -707,7 +707,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                         setSenderAlias('');
                       }
                     }}
-                    className="w-4 h-4 accent-[#E85B88] rounded cursor-pointer"
+                    className="w-4 h-4 accent-[#800020] rounded cursor-pointer"
                   />
                   <span className="text-xs sm:text-sm font-bold text-[#2D160E]">
                     Kirim sebagai Anonim (Sembunyikan nama asli / alias)
@@ -745,7 +745,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                       href="https://www.instagram.com/se.cretfess/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn btn-pink text-xs font-bold py-2.5 px-4 flex items-center justify-center gap-1.5 shadow-[2px_2px_0_#2D160E]"
+                      className="btn btn-maroon text-xs font-bold py-2.5 px-4 flex items-center justify-center gap-1.5 shadow-[2px_2px_0_#2D160E]"
                     >
                       <InstagramIcon size={14} />
                       <span>Pantau Instagram @se.cretfess</span>
@@ -779,7 +779,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                         setEmbedError(null);
                         setIsPlayingPreview(false);
                       }}
-                      className="text-[11px] font-bold text-[#E85B88] hover:underline flex items-center gap-1"
+                      className="text-[11px] font-bold text-[#800020] hover:underline flex items-center gap-1"
                     >
                       <RotateCcw size={11} />
                       <span>Ganti Lagu</span>
@@ -791,7 +791,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                 {!selectedVideo ? (
                   <div className="space-y-3">
                     <label className="input-label text-xs">
-                      Cari Judul Lagu atau Musisi di YouTube <span className="text-[#E85B88]">*</span>
+                      Cari Judul Lagu atau Musisi di YouTube <span className="text-[#800020]">*</span>
                     </label>
                     <div className="flex gap-2">
                       <div className="relative flex-1">
@@ -854,7 +854,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                                 setStartTime(30);
                                 setDuration(15);
                               }}
-                              className="p-2.5 rounded-xl border border-[#2D160E] bg-white hover:bg-[#FFAEC8]/15 cursor-pointer transition-all flex items-start gap-2.5 group shadow-[1.5px_1.5px_0_#2D160E]"
+                              className="p-2.5 rounded-xl border border-[#2D160E] bg-white hover:bg-[#800020]/15 cursor-pointer transition-all flex items-start gap-2.5 group shadow-[1.5px_1.5px_0_#2D160E]"
                             >
                               <img
                                 src={item.thumbnailUrl}
@@ -862,13 +862,13 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                                 className="w-16 h-12 rounded-lg object-cover border border-[#2D160E] shrink-0"
                               />
                               <div className="min-w-0 flex-1">
-                                <h5 className="text-xs font-black text-[#2D160E] line-clamp-1 group-hover:text-[#E85B88]">
+                                <h5 className="text-xs font-black text-[#2D160E] line-clamp-1 group-hover:text-[#800020]">
                                   {item.title}
                                 </h5>
                                 <p className="text-[11px] font-semibold text-[#6B5347] truncate">
                                   {item.channelTitle}
                                 </p>
-                                <span className="inline-block mt-1 text-[10px] font-bold text-[#E85B88]">
+                                <span className="inline-block mt-1 text-[10px] font-bold text-[#800020]">
                                   Pilih Lagu Ini &rarr;
                                 </span>
                               </div>
@@ -889,7 +889,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                         className="w-14 h-11 rounded-lg object-cover border border-[#2D160E] shrink-0"
                       />
                       <div className="min-w-0 flex-1">
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-[#E85B88] flex items-center gap-1">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-[#800020] flex items-center gap-1">
                           <YouTubeIcon size={11} className="text-red-600" />
                           Lagu Terpilih
                         </span>
@@ -933,7 +933,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                       {!embedError && (
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-xl bg-white border border-[#2D160E] shadow-[1.5px_1.5px_0_#2D160E] text-xs">
                           <div className="flex items-center gap-2 text-[#6B5347]">
-                            <Clock size={15} className="text-[#E85B88] shrink-0" />
+                            <Clock size={15} className="text-[#800020] shrink-0" />
                             <span className="font-medium">Posisi Putar Video:</span>
                             <span className="font-mono font-bold text-[#2D160E] bg-[#FAF8F5] px-2 py-0.5 rounded-md border border-[#2D160E]/20">
                               {youtubeService.formatSecondsToTime(currentVideoTime)}
@@ -945,7 +945,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                           <button
                             type="button"
                             onClick={handleSetCurrentAsStart}
-                            className="btn btn-sm btn-white text-[11px] font-bold text-[#2D160E] hover:text-[#E85B88] border border-[#2D160E] py-1 px-3 shadow-[1px_1px_0_#2D160E] flex items-center justify-center gap-1.5 transition-all self-start sm:self-auto"
+                            className="btn btn-sm btn-white text-[11px] font-bold text-[#2D160E] hover:text-[#800020] border border-[#2D160E] py-1 px-3 shadow-[1px_1px_0_#2D160E] flex items-center justify-center gap-1.5 transition-all self-start sm:self-auto"
                             title="Jadikan posisi detik pemutar saat ini sebagai titik mulai"
                           >
                             <span>Gunakan Menit Ini ({youtubeService.formatSecondsToTime(currentVideoTime)}) Sebagai Titik Mulai &darr;</span>
@@ -958,7 +958,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                     <div className="p-4 rounded-xl bg-white border border-[#2D160E] shadow-[2px_2px_0_#2D160E] space-y-3">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div className="flex items-center gap-1.5 text-xs font-black text-[#2D160E]">
-                          <Sliders size={13} className="text-[#E85B88]" />
+                          <Sliders size={13} className="text-[#800020]" />
                           <span>Pilih Potongan Musik (Snippet Trim)</span>
                         </div>
 
@@ -972,7 +972,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                               onClick={() => handleDurationChange(d)}
                               className={`px-2.5 py-0.5 text-xs font-bold rounded-full border border-[#2D160E] transition-all ${
                                 duration === d
-                                  ? 'bg-[#FFAEC8] shadow-[1.5px_1.5px_0_#2D160E] text-[#2D160E]'
+                                  ? 'bg-[#800020] shadow-[1.5px_1.5px_0_#2D160E] text-white'
                                   : 'bg-[#FAF8F5] text-[#6B5347] hover:bg-white'
                               }`}
                             >
@@ -985,8 +985,8 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                       {/* Start Timestamp Slider */}
                       <div className="space-y-1 pt-1">
                         <div className="flex items-center justify-between text-xs font-mono font-bold text-[#2D160E]">
-                          <span>Mulai: <span className="text-[#E85B88]">{youtubeService.formatSecondsToTime(startTime)}</span></span>
-                          <span>Selesai: <span className="text-[#E85B88]">{youtubeService.formatSecondsToTime(startTime + duration)}</span></span>
+                          <span>Mulai: <span className="text-[#800020]">{youtubeService.formatSecondsToTime(startTime)}</span></span>
+                          <span>Selesai: <span className="text-[#800020]">{youtubeService.formatSecondsToTime(startTime + duration)}</span></span>
                         </div>
 
                         <input
@@ -996,7 +996,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                           step={1}
                           value={startTime}
                           onChange={(e) => handleStartTimeChange(Number(e.target.value))}
-                          className="w-full accent-[#E85B88] cursor-pointer"
+                          className="w-full accent-[#800020] cursor-pointer"
                         />
 
                         <div className="flex items-center justify-between text-[10px] font-semibold text-[#9A8077]">
@@ -1012,7 +1012,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                           type="button"
                           onClick={handleTogglePreview}
                           className={`btn btn-sm flex items-center gap-1.5 text-xs font-bold py-2 px-4 shadow-[1.5px_1.5px_0_#2D160E] ${
-                            isPlayingPreview ? 'bg-amber-100 text-amber-900 border-amber-400' : 'btn-pink'
+                            isPlayingPreview ? 'bg-amber-100 text-amber-900 border-amber-400' : 'btn-maroon'
                           }`}
                         >
                           {isPlayingPreview ? (
@@ -1044,10 +1044,10 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="input-label mb-0">
-                  Isi Pesan <span className="text-[#E85B88]">*</span>
+                  Isi Pesan <span className="text-[#800020]">*</span>
                 </label>
                 <span className={`text-[11px] font-mono font-bold ${
-                  message.length > 450 ? 'text-[#E85B88]' : 'text-[#6B5347]'
+                  message.length > 450 ? 'text-[#800020]' : 'text-[#6B5347]'
                 }`}>
                   {message.length} / 500
                 </span>
@@ -1069,7 +1069,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
           <div className="editorial-card p-5 bg-[#FAF8F5] border border-[#2D160E] space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <ShieldAlert size={18} className="text-[#E85B88] shrink-0" />
+                <ShieldAlert size={18} className="text-[#800020] shrink-0" />
                 <h3 className="text-sm font-black text-[#2D160E]">
                   Wajib Baca Peraturan Komunitas
                 </h3>
@@ -1097,11 +1097,11 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                   type="checkbox"
                   checked={rulesAccepted}
                   onChange={(e) => setRulesAccepted(e.target.checked)}
-                  className="w-4 h-4 mt-0.5 accent-[#E85B88] rounded cursor-pointer shrink-0"
+                  className="w-4 h-4 mt-0.5 accent-[#800020] rounded cursor-pointer shrink-0"
                 />
                 <span className="text-xs font-bold text-[#2D160E] leading-normal">
                   Saya telah membaca, memahami, dan berjanji mematuhi seluruh peraturan HIMASEFESS.
-                  {!rulesAccepted && <span className="text-[#E85B88] ml-1">(Wajib dicentang)</span>}
+                  {!rulesAccepted && <span className="text-[#800020] ml-1">(Wajib dicentang)</span>}
                 </span>
               </label>
             </div>
@@ -1131,7 +1131,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
             </button>
 
             {!rulesAccepted && (
-              <p className="text-[11px] text-[#E85B88] font-bold text-center mt-2">
+              <p className="text-[11px] text-[#800020] font-bold text-center mt-2">
                 * Centang kotak persetujuan rules di atas untuk mengaktifkan tombol kirim.
               </p>
             )}
@@ -1157,7 +1157,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
             
             <div className="flex items-center justify-between pb-3 border-b border-[#2D160E]/15">
               <div className="flex items-center gap-2">
-                <ShieldCheck size={20} className="text-[#E85B88]" />
+                <ShieldCheck size={20} className="text-[#800020]" />
                 <h3 className="text-base sm:text-lg font-black text-[#2D160E]">
                   Ketentuan & Peraturan HIMASEFESS
                 </h3>
@@ -1165,7 +1165,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
               <button
                 type="button"
                 onClick={() => setShowRulesModal(false)}
-                className="p-1 rounded-lg border border-[#2D160E] bg-[#FAF8F5] text-[#2D160E] hover:bg-[#FFAEC8] transition-colors"
+                className="p-1 rounded-lg border border-[#2D160E] bg-[#FAF8F5] text-[#2D160E] hover:bg-[#800020] hover:text-white transition-colors"
               >
                 <X size={16} />
               </button>
@@ -1213,8 +1213,8 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                 </p>
               </div>
 
-              <div className="p-3 rounded-lg bg-pink-50 border border-pink-200 space-y-1">
-                <p className="font-black text-[#E85B88] flex items-center gap-1.5">
+              <div className="p-3 rounded-lg bg-[#800020]/5 border border-[#800020]/25 space-y-1">
+                <p className="font-black text-[#800020] flex items-center gap-1.5">
                   <Music size={14} />
                   5. Ketentuan Songfess
                 </p>
@@ -1249,7 +1249,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="editorial-card p-6 sm:p-8 bg-white max-w-md w-full space-y-4 shadow-[6px_6px_0_#2D160E] relative">
             <div className="text-center space-y-2">
-              <div className="w-12 h-12 rounded-full bg-[#FFAEC8] border border-[#2D160E] flex items-center justify-center mx-auto text-[#2D160E] shadow-[2px_2px_0_#2D160E]">
+              <div className="w-12 h-12 rounded-full bg-[#800020] border border-[#2D160E] flex items-center justify-center mx-auto text-white shadow-[2px_2px_0_#2D160E]">
                 <CheckCircle size={26} />
               </div>
 
@@ -1273,7 +1273,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                 <button
                   type="button"
                   onClick={handleCopyCode}
-                  className="p-1.5 rounded-lg bg-white border border-[#2D160E] text-[#2D160E] hover:bg-[#FFAEC8] transition-colors"
+                  className="p-1.5 rounded-lg bg-white border border-[#2D160E] text-[#2D160E] hover:bg-[#800020] hover:text-white transition-colors"
                   title="Salin Kode"
                 >
                   {copiedCode ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}

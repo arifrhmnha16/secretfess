@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Editorial Palette: Cream, Dark Chocolate, Pastel Pink */
+  /* Editorial Palette: Cream, Dark Chocolate, Maroon */
   --bg-cream: #FAF8F5;
   --bg-card: #FFFFFF;
   --color-chocolate: #2D160E;
@@ -10,10 +10,16 @@
   --color-chocolate-muted: #6B5347;
   --color-chocolate-faint: #9A8077;
   
-  --color-pink: #FFAEC8;
-  --color-pink-soft: #FFF2F6;
-  --color-pink-hover: #FF9BBA;
-  --color-pink-deep: #E85B88;
+  --color-maroon: #800020;
+  --color-maroon-soft: #F9EBEF;
+  --color-maroon-hover: #67001A;
+  --color-maroon-deep: #500014;
+
+  /* Aliases for backwards compatibility */
+  --color-pink: var(--color-maroon);
+  --color-pink-soft: var(--color-maroon-soft);
+  --color-pink-hover: var(--color-maroon-hover);
+  --color-pink-deep: var(--color-maroon);
 
   --color-matcha: #D8F3DC;
   --color-matcha-dark: #2D5A34;
@@ -75,9 +81,10 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
 }
 
-/* Reference Signature: Editorial Pink Highlight Box */
+/* Reference Signature: Editorial Maroon Highlight Box */
+.highlight-maroon-box,
 .highlight-pink-box {
-  background-color: var(--color-pink);
+  background-color: var(--color-maroon);
   color: #FFFFFF;
   display: inline-block;
   padding: 0.15em 0.45em;
@@ -100,10 +107,16 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1;
   border: var(--border-element);
-  background-color: var(--color-pink);
-  color: var(--color-chocolate);
+  background-color: var(--color-maroon);
+  color: #FFFFFF;
   box-shadow: var(--shadow-pill);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pill-badge.pill-maroon,
+.pill-badge.pill-pink {
+  background-color: var(--color-maroon);
+  color: #FFFFFF;
 }
 
 .pill-badge.pill-white {
@@ -203,18 +216,22 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--shadow-active);
 }
 
+.btn-maroon,
 .btn-pink {
-  background-color: var(--color-pink);
-  color: var(--color-chocolate);
+  background-color: var(--color-maroon);
+  color: #FFFFFF;
   box-shadow: var(--shadow-btn);
 }
 
+.btn-maroon:hover,
 .btn-pink:hover {
-  background-color: var(--color-pink-hover);
+  background-color: var(--color-maroon-hover);
+  color: #FFFFFF;
   transform: translate(-1.5px, -1.5px);
   box-shadow: 4px 4px 0px var(--color-chocolate);
 }
 
+.btn-maroon:active,
 .btn-pink:active {
   transform: translate(1.5px, 1.5px);
   box-shadow: var(--shadow-active);
@@ -267,7 +284,7 @@ h1, h2, h3, h4, h5, h6 {
 .editorial-input:focus, .editorial-textarea:focus, .editorial-select:focus {
   border-color: var(--color-chocolate);
   box-shadow: var(--shadow-btn);
-  background-color: #FFFAFC;
+  background-color: #FFFFFF;
 }
 
 .editorial-textarea {

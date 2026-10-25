@@ -16,7 +16,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           <div className="lg:col-span-2 space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-xl font-black text-[#2D160E]">Se.Cretfess</span>
-              <span className="px-2 py-0.5 rounded-full bg-[#FFAEC8] border border-[#2D160E] text-[10px] font-black shadow-[1.5px_1.5px_0_#2D160E]">
+              <span className="px-2 py-0.5 rounded-full bg-[#800020] border border-[#2D160E] text-[10px] font-black text-white shadow-[1.5px_1.5px_0_#2D160E]">
                 HIMASE
               </span>
             </div>
@@ -29,7 +29,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                 href="https://instagram.com/se.cretfess" 
                 target="_blank" 
                 rel="noreferrer"
-                className="btn btn-white btn-sm flex items-center gap-1.5 text-xs hover:bg-[#FFAEC8]/20"
+                className="btn btn-white btn-sm flex items-center gap-1.5 text-xs hover:bg-[#800020]/15"
               >
                 <InstagramIcon size={13} />
                 <span>@se.cretfess</span>
@@ -81,14 +81,14 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           {/* Safety & Compliance */}
           <div className="space-y-2.5">
             <h4 className="text-xs uppercase tracking-wider font-extrabold text-[#2D160E] flex items-center gap-1.5">
-              <ShieldAlert size={14} className="text-[#E85B88]" />
+              <ShieldAlert size={14} className="text-[#800020]" />
               Komitmen Privasi
             </h4>
             <p className="text-xs text-[#6B5347] leading-relaxed font-medium">
               Data identitas asli tidak pernah disimpan jika kamu memilih opsi <strong>Anonim</strong>. 
               Semua kiriman dimoderasi oleh pengurus demi mencegah doxxing dan cyberbullying.
             </p>
-            <div className="p-2.5 bg-[#FFAEC8]/20 rounded-xl border border-[#2D160E]/20 text-[11px] font-bold text-[#2D160E] flex items-start gap-1.5">
+            <div className="p-2.5 bg-[#800020]/15 rounded-xl border border-[#2D160E]/20 text-[11px] font-bold text-[#2D160E] flex items-start gap-1.5">
               <HelpCircle size={14} className="shrink-0 mt-0.5 text-[#2D160E]" />
               <span>Menemukan konten yang merugikanmu? Hubungi DM Instagram @se.cretfess untuk take-down cepat.</span>
             </div>
@@ -104,7 +104,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
 
           <div className="flex items-center gap-1.5">
             <span>Dirancang dengan kurasi teliti</span>
-            <Heart size={13} className="text-[#E85B88] fill-[#E85B88]" />
+            <Heart size={13} className="text-[#800020] fill-[#800020]" />
             <span>untuk mahasiswa</span>
           </div>
 

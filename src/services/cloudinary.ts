@@ -95,9 +95,10 @@ export const cloudinaryService = {
       matcha: { cardBg: '#FAFAF7', accentBg: '#D8F3DC', accentText: '#2D5A34' },
       caramel: { cardBg: '#FDFBF7', accentBg: '#FEEAA1', accentText: '#664E19' },
       lavender: { cardBg: '#FAF8FC', accentBg: '#EADCF8', accentText: '#503170' },
-      pink_cream: { cardBg: '#FFFFFF', accentBg: '#FFAEC8', accentText: '#2D160E' }
+      maroon_cream: { cardBg: '#FFFFFF', accentBg: '#800020', accentText: '#FFFFFF' },
+      pink_cream: { cardBg: '#FFFFFF', accentBg: '#800020', accentText: '#FFFFFF' }
     };
-    const curTheme = themeColors[submission.theme || 'pink_cream'] || themeColors.pink_cream;
+    const curTheme = themeColors[submission.theme || 'maroon_cream'] || themeColors.maroon_cream;
 
     const c = ctx;
 
@@ -121,7 +122,7 @@ export const cloudinaryService = {
     function drawSparkles(x: number, y: number) {
       c.save();
       c.translate(x, y);
-      c.fillStyle = '#FFAEC8';
+      c.fillStyle = '#800020';
       c.strokeStyle = '#2D160E';
       c.lineWidth = 3;
       // 4-pointed star
@@ -152,7 +153,7 @@ export const cloudinaryService = {
       c.save();
       c.translate(x, y);
       c.rotate((35 * Math.PI) / 180);
-      c.fillStyle = '#FFAEC8';
+      c.fillStyle = '#800020';
       c.strokeStyle = '#2D160E';
       c.lineWidth = 3;
       c.beginPath();
@@ -241,7 +242,7 @@ export const cloudinaryService = {
       ctx.lineWidth = 3.5;
       ctx.stroke();
 
-      ctx.fillStyle = '#2D160E';
+      ctx.fillStyle = curTheme.accentText;
       ctx.font = 'bold 26px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'left';
       ctx.fillText(`Untuk: ${submission.recipient.slice(0, 24)}`, cardX + 75, cardY + 160);
@@ -352,7 +353,7 @@ export const cloudinaryService = {
       ctx.lineWidth = 3.5;
       ctx.stroke();
 
-      ctx.fillStyle = '#2D160E';
+      ctx.fillStyle = curTheme.accentText;
       ctx.font = 'bold 26px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'left';
       ctx.fillText(`Didedikasikan untuk: ${submission.recipient.slice(0, 20)}`, cardX + 85, cardY + 166);
