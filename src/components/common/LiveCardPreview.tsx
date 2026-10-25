@@ -181,116 +181,154 @@ export const LiveCardPreview: React.FC<LiveCardPreviewProps> = ({
         className="p-4 sm:p-5 flex items-center justify-center bg-[#FAF7F2] rounded-3xl"
       >
         <div 
-          className={`w-full relative rounded-[22px] border-[2px] border-[#2D160E] p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 ${
+          className={`relative ${
             type === 'menfess'
               ? 'w-[320px] sm:w-[340px] aspect-[4/5]'
               : 'w-[300px] sm:w-[320px] aspect-[9/16]'
           }`}
-          style={{
-            backgroundColor: currentTheme.cardBg,
-            boxShadow: '4px 4px 0px #2D160E'
-          }}
         >
-          {/* Subtle Washi Tape Strip at top */}
-          <div className="absolute left-1/2 -translate-x-1/2 z-10 -top-2.5">
-            <TapeStrip width={70} height={16} rotate={1} />
-          </div>
+          {/* Card Solid Shadow (Immune to html-to-image/foreignObject box-shadow clipping bugs) */}
+          <div 
+            className="absolute inset-0 rounded-[22px] bg-[#2D160E] translate-x-[4px] translate-y-[4px] pointer-events-none"
+            aria-hidden="true"
+          />
 
-          {/* Decorative Doodles */}
-          <div className="absolute top-3 right-3 pointer-events-none opacity-60">
-            <SparkleCluster size={28} color="#2D160E" />
-          </div>
-
-          {/* Top Header Section */}
-          <div className="space-y-2.5 pt-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-black tracking-wider text-[#2D160E] uppercase flex items-center gap-1">
-                <span>Se.Cretfess</span>
-                <span className="w-1 h-1 rounded-full bg-[#800020]"></span>
-                <span className="text-[#6B5347]">HIMASE</span>
-              </span>
-
-              <span className="text-[10px] font-mono font-bold bg-[#FAF8F5] border border-[#2D160E] px-2 py-0.5 rounded-full shadow-[1px_1px_0_#2D160E]">
-                #{trackingCode}
-              </span>
+          {/* Main Card */}
+          <div 
+            className="relative z-10 w-full h-full rounded-[22px] border-[2px] border-[#2D160E] p-5 sm:p-6 flex flex-col justify-between transition-all duration-200"
+            style={{
+              backgroundColor: currentTheme.cardBg,
+              boxShadow: 'none'
+            }}
+          >
+            {/* Subtle Washi Tape Strip at top */}
+            <div className="absolute left-1/2 -translate-x-1/2 z-20 -top-2.5">
+              <TapeStrip width={70} height={16} rotate={1} />
             </div>
 
-            {/* Capsule Pill: Recipient */}
-            <div className="inline-flex items-center">
-              <div 
-                className="pill-badge text-xs"
-                style={{ backgroundColor: currentTheme.accentBg, color: currentTheme.accentText }}
-              >
-                <span className="font-medium opacity-80">
-                  {type === 'songfess' ? 'Didedikasikan untuk:' : 'Untuk:'}
-                </span>
-                <span className="font-extrabold truncate max-w-[170px]">
-                  {recipient.trim() ? recipient : '@kamu'}
-                </span>
-              </div>
+            {/* Decorative Doodles */}
+            <div className="absolute top-3 right-3 pointer-events-none opacity-60">
+              <SparkleCluster size={28} color="#2D160E" />
             </div>
-          </div>
 
-          {/* Center Content Section */}
-          <div className="my-auto py-2 space-y-3">
-            {type === 'menfess' ? (
-              <p className="text-sm sm:text-base font-extrabold text-[#2D160E] leading-snug break-words">
-                {message.trim() ? (
-                  message
-                ) : (
-                  <span className="text-[#9A8077] italic font-normal text-sm">
-                    "Ketik pesan manismu di form... Kartu editorial ini akan otomatis diperbarui secara instan!"
+            {/* Top Header Section */}
+            <div className="space-y-2.5 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-black tracking-wider text-[#2D160E] uppercase flex items-center gap-1">
+                  <span>Se.Cretfess</span>
+                  <span className="w-1 h-1 rounded-full bg-[#800020]"></span>
+                  <span className="text-[#6B5347]">HIMASE</span>
+                </span>
+
+                {/* Ticket code pill with exact rounded solid shadow */}
+                <div className="relative inline-flex items-center">
+                  <div 
+                    className="absolute inset-0 rounded-full bg-[#2D160E] translate-x-[1px] translate-y-[1px] pointer-events-none"
+                    aria-hidden="true"
+                  />
+                  <span className="relative z-10 text-[10px] font-mono font-bold bg-[#FAF8F5] border border-[#2D160E] px-2 py-0.5 rounded-full">
+                    #{trackingCode}
                   </span>
-                )}
-              </p>
-            ) : (
-              /* Outer Frame Box that holds the 1:1 music box (shifted up to leave space underneath for manual title) */
-              <div className="w-full max-w-[270px] mx-auto min-h-[220px] sm:min-h-[240px] pt-4 sm:pt-5 pb-12 sm:pb-14 px-4 rounded-2xl border-[1.75px] border-[#2D160E] bg-[#FAF8F5] shadow-[2.5px_2.5px_0_#2D160E] flex flex-col items-center justify-start">
-                {/* Compact 1:1 Square Box inside (a bit smaller) */}
-                <div className="w-[112px] sm:w-[120px] aspect-square rounded-xl border-[1.5px] border-[#2D160E] bg-white p-2 shadow-[1.5px_1.5px_0_#2D160E] flex flex-col items-center justify-center text-center space-y-1 transition-all">
-                  <div className="space-y-0.5 px-0.5">
-                    <h4 className="text-[10px] font-black text-[#2D160E] leading-tight line-clamp-2">
-                      {songData?.title?.trim() ? songData.title : 'Judul Lagu Pilihan'}
-                    </h4>
-                    <p className="text-[9px] font-bold text-[#6B5347] truncate max-w-[98px]">
-                      {songData?.artist?.trim() ? songData.artist : 'Nama Artis / Band'}
-                    </p>
-                  </div>
-                  <div className="pt-0.5">
-                    <span className="inline-block px-1.5 py-0.5 rounded bg-[#FAF8F5] border border-[#2D160E]/20 text-[8.5px] font-mono font-bold text-[#2D160E]">
-                      ⏱️ <span className="text-[#800020]">{songData?.formattedTimeRange || (songData?.favoriteTimestamp ? songData.favoriteTimestamp : '00:00 - 00:15')}</span>{' '}
-                      <span className="text-[#6B5347] font-medium">({songData?.duration ? `${songData.duration}s` : '15s'})</span>
-                    </span>
-                  </div>
                 </div>
               </div>
-            )}
-          </div>
 
-          {/* Footer Section */}
-          <div className="pt-2 border-t border-[#2D160E]/15 flex items-end justify-between">
-            <div>
-              <p className="text-[10px] font-bold text-[#6B5347] uppercase tracking-wider">
-                Dari:
-              </p>
-              <p className="font-hand text-sm sm:text-base font-bold text-[#2D160E]">
-                {isAnonymous 
-                  ? 'Anonim' 
-                  : (senderAlias.trim() ? senderAlias : 'Anonim')}
-              </p>
-            </div>
-
-            <div className="text-right flex flex-col items-end">
-              <div className="flex items-center gap-1 text-[#2D160E]">
-                <Heart size={12} className="text-[#800020] fill-[#800020]" />
-                <span className="text-[10px] font-bold font-mono">@se.cretfess</span>
+              {/* Capsule Pill: Recipient with exact rounded solid shadow */}
+              <div className="relative inline-flex items-center">
+                <div 
+                  className="absolute inset-0 rounded-full bg-[#2D160E] translate-x-[2px] translate-y-[2px] pointer-events-none"
+                  aria-hidden="true"
+                />
+                <div 
+                  className="pill-badge text-xs relative z-10 !shadow-none"
+                  style={{ 
+                    backgroundColor: currentTheme.accentBg, 
+                    color: currentTheme.accentText,
+                    boxShadow: 'none'
+                  }}
+                >
+                  <span className="font-medium opacity-80">
+                    {type === 'songfess' ? 'Didedikasikan untuk:' : 'Untuk:'}
+                  </span>
+                  <span className="font-extrabold truncate max-w-[170px]">
+                    {recipient.trim() ? recipient : '@kamu'}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Delicate Pencil in corner */}
-          <div className="absolute -bottom-2 -left-2 pointer-events-none opacity-40">
-            <PencilDoodle size={28} color="#2D160E" />
+            {/* Center Content Section */}
+            <div className="my-auto py-2 space-y-3">
+              {type === 'menfess' ? (
+                <p className="text-sm sm:text-base font-extrabold text-[#2D160E] leading-snug break-words">
+                  {message.trim() ? (
+                    message
+                  ) : (
+                    <span className="text-[#9A8077] italic font-normal text-sm">
+                      "Ketik pesan manismu di form... Kartu editorial ini akan otomatis diperbarui secara instan!"
+                    </span>
+                  )}
+                </p>
+              ) : (
+                /* Outer Frame Box that holds the 1:1 music box (shifted up to leave space underneath for manual title) */
+                <div className="relative w-full max-w-[270px] mx-auto min-h-[220px] sm:min-h-[240px]">
+                  <div 
+                    className="absolute inset-0 rounded-2xl bg-[#2D160E] translate-x-[2.5px] translate-y-[2.5px] pointer-events-none"
+                    aria-hidden="true"
+                  />
+                  <div className="relative z-10 w-full h-full pt-4 sm:pt-5 pb-12 sm:pb-14 px-4 rounded-2xl border-[1.75px] border-[#2D160E] bg-[#FAF8F5] flex flex-col items-center justify-start">
+                    {/* Compact 1:1 Square Box inside (a bit smaller) */}
+                    <div className="relative w-[112px] sm:w-[120px] aspect-square">
+                      <div 
+                        className="absolute inset-0 rounded-xl bg-[#2D160E] translate-x-[1.5px] translate-y-[1.5px] pointer-events-none"
+                        aria-hidden="true"
+                      />
+                      <div className="relative z-10 w-full h-full rounded-xl border-[1.5px] border-[#2D160E] bg-white p-2 flex flex-col items-center justify-center text-center space-y-1 transition-all">
+                        <div className="space-y-0.5 px-0.5">
+                          <h4 className="text-[10px] font-black text-[#2D160E] leading-tight line-clamp-2">
+                            {songData?.title?.trim() ? songData.title : 'Judul Lagu Pilihan'}
+                          </h4>
+                          <p className="text-[9px] font-bold text-[#6B5347] truncate max-w-[98px]">
+                            {songData?.artist?.trim() ? songData.artist : 'Nama Artis / Band'}
+                          </p>
+                        </div>
+                        <div className="pt-0.5">
+                          <span className="inline-block px-1.5 py-0.5 rounded bg-[#FAF8F5] border border-[#2D160E]/20 text-[8.5px] font-mono font-bold text-[#2D160E]">
+                            ⏱️ <span className="text-[#800020]">{songData?.formattedTimeRange || (songData?.favoriteTimestamp ? songData.favoriteTimestamp : '00:00 - 00:15')}</span>{' '}
+                            <span className="text-[#6B5347] font-medium">({songData?.duration ? `${songData.duration}s` : '15s'})</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer Section */}
+            <div className="pt-2 border-t border-[#2D160E]/15 flex items-end justify-between">
+              <div>
+                <p className="text-[10px] font-bold text-[#6B5347] uppercase tracking-wider">
+                  Dari:
+                </p>
+                <p className="font-hand text-sm sm:text-base font-bold text-[#2D160E]">
+                  {isAnonymous 
+                    ? 'Anonim' 
+                    : (senderAlias.trim() ? senderAlias : 'Anonim')}
+                </p>
+              </div>
+
+              <div className="text-right flex flex-col items-end">
+                <div className="flex items-center gap-1 text-[#2D160E]">
+                  <Heart size={12} className="text-[#800020] fill-[#800020]" />
+                  <span className="text-[10px] font-bold font-mono">@se.cretfess</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Delicate Pencil in corner */}
+            <div className="absolute -bottom-2 -left-2 pointer-events-none opacity-40 z-20">
+              <PencilDoodle size={28} color="#2D160E" />
+            </div>
           </div>
         </div>
       </div>
