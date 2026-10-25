@@ -107,8 +107,8 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1;
   border: var(--border-element);
-  background-color: var(--color-maroon);
-  color: #FFFFFF;
+  background-color: #FFFFFF;
+  color: var(--color-chocolate);
   box-shadow: var(--shadow-pill);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -121,6 +121,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .pill-badge.pill-white {
   background-color: #FFFFFF;
+  color: var(--color-chocolate);
 }
 
 .pill-badge.pill-dark {

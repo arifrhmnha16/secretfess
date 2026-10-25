@@ -720,7 +720,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                   <span className="text-xs sm:text-sm font-bold text-[#2D160E]">
                     Kirim sebagai Anonim (Sembunyikan nama asli / alias)
                   </span>
-                  <span className="pill-badge pill-white text-[10px] py-0.5 px-2">
+                  <span className="pill-badge pill-white text-[10px] py-0.5 px-2 text-[#2D160E]">
                     Identitas Rahasia
                   </span>
                 </label>
@@ -737,7 +737,7 @@ export const SubmitPage: React.FC<SubmitPageProps> = ({
                   </div>
 
                   <div className="space-y-1.5">
-                    <span className="pill-badge text-[10px] bg-rose-200 text-rose-900 border-rose-300 font-bold">
+                    <span className="pill-badge text-[10px] !bg-rose-200 !text-rose-950 border-rose-300 font-bold">
                       Sesi Ditutup Sementara
                     </span>
                     <h3 className="text-lg sm:text-xl font-black text-[#2D160E]">

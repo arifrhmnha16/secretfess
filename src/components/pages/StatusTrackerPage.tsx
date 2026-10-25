@@ -278,7 +278,7 @@ export const StatusTrackerPage: React.FC<StatusTrackerPageProps> = ({
       <div className="editorial-card p-6 md:p-8 bg-[#FAF8F5] space-y-3">
         <div className="flex items-center gap-2">
           <span className="pill-badge pill-matcha text-xs">
-            <Radio size={12} className="text-[#10B981]" />
+            <Radio size={12} className="text-[#2D5A34]" />
             Informasi Sesi Songfess
           </span>
         </div>

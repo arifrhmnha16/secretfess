@@ -84,12 +84,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Right CTA / Session indicator */}
         <div className="hidden lg:flex items-center gap-3">
           {isSongfessOpen ? (
-            <div className="pill-badge text-[11px] py-1 px-3 bg-emerald-50 text-emerald-800 border-emerald-400 shadow-[1.5px_1.5px_0_#2D160E] flex items-center gap-1.5 font-bold">
+            <div className="pill-badge text-[11px] py-1 px-3 !bg-emerald-50 !text-emerald-950 border-emerald-400 shadow-[1.5px_1.5px_0_#2D160E] flex items-center gap-1.5 font-bold">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <span>Songfess Dibuka</span>
             </div>
           ) : (
-            <div className="pill-badge text-[11px] py-1 px-3 bg-rose-50 text-rose-800 border-rose-300 shadow-[1.5px_1.5px_0_#2D160E] flex items-center gap-1.5 font-bold">
+            <div className="pill-badge text-[11px] py-1 px-3 !bg-rose-50 !text-rose-950 border-rose-300 shadow-[1.5px_1.5px_0_#2D160E] flex items-center gap-1.5 font-bold">
               <span className="w-2 h-2 rounded-full bg-rose-500"></span>
               <span>Songfess Ditutup</span>
             </div>
@@ -121,10 +121,17 @@ export const Navbar: React.FC<NavbarProps> = ({
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-[#2D160E] bg-[#FAF8F5] px-4 py-4 space-y-2 shadow-md">
           <div className="pb-2 border-b border-[#2D160E]/10">
-            <div className="pill-badge pill-white text-[11px]">
-              <span className="pulse-dot"></span>
-              <span>Sesi Songfess #12 Buka (18:00 - 23:00 WIB)</span>
-            </div>
+            {isSongfessOpen ? (
+              <div className="pill-badge text-[11px] py-1 px-3 !bg-emerald-50 !text-emerald-950 border-emerald-400 shadow-[1.5px_1.5px_0_#2D160E] flex items-center gap-1.5 font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Songfess Dibuka</span>
+              </div>
+            ) : (
+              <div className="pill-badge text-[11px] py-1 px-3 !bg-rose-50 !text-rose-950 border-rose-300 shadow-[1.5px_1.5px_0_#2D160E] flex items-center gap-1.5 font-bold">
+                <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                <span>Songfess Ditutup</span>
+              </div>
+            )}
           </div>
 
           <button

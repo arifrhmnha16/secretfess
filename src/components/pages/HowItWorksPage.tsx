@@ -162,7 +162,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({ onNavigateSubmit
       {/* Lifecycle Status Explainer Table for Public Tracking */}
       <div className="space-y-5">
         <div className="text-center space-y-1">
-          <div className="pill-badge pill-white text-xs">
+          <div className="pill-badge pill-white text-xs text-[#2D160E]">
             Panduan Pelacakan
           </div>
           <h2 className="text-xl sm:text-3xl font-black text-[#2D160E]">

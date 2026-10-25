@@ -140,13 +140,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
             <div className="space-y-4 mb-6">
               <div className="flex items-center justify-between">
                 {session?.isOpen ? (
-                  <span className="pill-badge text-xs inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border-emerald-400 shadow-[1.5px_1.5px_0_#2D160E] font-bold">
-                    <Music size={13} />
+                  <span className="pill-badge text-xs inline-flex items-center gap-1.5 !bg-emerald-50 !text-emerald-950 border-emerald-400 shadow-[1.5px_1.5px_0_#2D160E] font-bold">
+                    <Music size={13} className="text-emerald-700" />
                     <span>Mode Songfess • Sesi Dibuka</span>
                   </span>
                 ) : (
-                  <span className="pill-badge text-xs inline-flex items-center gap-1.5 bg-rose-50 text-rose-800 border-rose-300 shadow-[1.5px_1.5px_0_#2D160E] font-bold">
-                    <Music size={13} />
+                  <span className="pill-badge text-xs inline-flex items-center gap-1.5 !bg-rose-50 !text-rose-950 border-rose-300 shadow-[1.5px_1.5px_0_#2D160E] font-bold">
+                    <Music size={13} className="text-rose-700" />
                     <span>Mode Songfess • Ditutup</span>
                   </span>
                 )}
@@ -183,19 +183,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             
             <div className="space-y-2 max-w-xl">
-              <div className="flex items-center gap-2">
-                <span className="pill-badge pill-white text-xs">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="pill-badge pill-white text-xs text-[#2D160E]">
                   <Radio size={13} className="text-[#800020]" />
                   Status Kuota Sesi
                 </span>
-                <span className="text-xs font-bold text-[#664E19]">
-                  Sesi #{session?.sessionNumber || 1} {session?.isOpen ? 'Aktif' : 'Tutup'}
+                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border border-[#2D160E] shadow-[1.5px_1.5px_0_#2D160E] ${
+                  session?.isOpen ? 'bg-emerald-100 text-emerald-950' : 'bg-rose-100 text-rose-950'
+                }`}>
+                  <span className={`w-2 h-2 rounded-full ${session?.isOpen ? 'bg-emerald-600 animate-pulse' : 'bg-rose-600'}`} />
+                  Sesi #{session?.sessionNumber || 1} • {session?.isOpen ? 'Aktif' : 'Tutup'}
                 </span>
               </div>
               <h3 className="text-lg sm:text-xl font-black text-[#2D160E]">
                 Jam Buka Pengiriman: {session?.operatingHours || '18:00 – 23:00 WIB'}
               </h3>
-              <p className="text-xs sm:text-sm text-[#664E19] leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#2D160E]/85 leading-relaxed font-medium">
                 {session?.announcement || 'Setiap malam, pengurus HIMASE mengkurasi kiriman terbaik untuk di-generate menjadi kartu Instagram story edisi eksklusif.'}
               </p>
             </div>
@@ -320,7 +323,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSubm
       <section className="mb-16 md:mb-24">
         <div className="editorial-card p-6 sm:p-10 bg-white space-y-8">
           <div className="text-center max-w-xl mx-auto space-y-2">
-            <span className="pill-badge pill-white text-xs">
+            <span className="pill-badge pill-white text-xs text-[#2D160E]">
               Kenapa Memilih Kami?
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-[#2D160E]">
